@@ -248,34 +248,44 @@ function determineDifficulty(word, meaning) {
 
 // Smart example generator for specific parts of speech (last resort only)
 function generateSmartExample(word, partOfSpeech, meaning) {
-  // Extract key concept from meaning
-  const meaningWords = meaning.toLowerCase().split(' ').filter(w => w.length > 4);
-  const concept = meaningWords[0] || 'quality';
-  
+  // Create contextual examples based on part of speech
   const examples = {
     'noun': [
-      `The ${word} evident in the historical documents provided scholars with valuable insights into the era.`,
-      `Researchers have long debated the nature and implications of ${word} in contemporary society.`,
-      `The concept of ${word} plays a crucial role in understanding this philosophical framework.`
+      `The study of ${word} has become increasingly important in contemporary academic discourse and research.`,
+      `Historical analysis reveals that ${word} played a significant role in shaping cultural developments during this period.`,
+      `Understanding the concept of ${word} is essential for comprehending the broader theoretical framework.`,
+      `The prevalence of ${word} in modern society has prompted scholars to reassess traditional assumptions.`,
+      `Philosophers have long debated the true nature and implications of ${word} in ethical considerations.`
     ],
     'verb': [
-      `Effective leaders must ${word} carefully to address the complex challenges facing their organizations.`,
-      `The study examined how different cultures ${word} in response to similar environmental pressures.`,
-      `To ${word} successfully requires both theoretical knowledge and practical experience.`
+      `Successful practitioners must learn to ${word} effectively when confronting complex professional challenges.`,
+      `The research team attempted to ${word} systematically, following rigorous methodological protocols throughout the investigation.`,
+      `Leaders who ${word} judiciously tend to achieve better outcomes than those who act impulsively.`,
+      `The ability to ${word} appropriately requires both extensive training and considerable practical experience.`,
+      `Scientists ${word} cautiously when dealing with sensitive experimental data that could affect public policy.`
     ],
     'adjective': [
-      `The ${word} characteristics of the material made it ideal for industrial applications.`,
-      `Critics praised the author's ${word} approach to exploring these controversial themes.`,
-      `The ${word} nature of the evidence presented made it difficult to draw definitive conclusions.`
+      `Her ${word} approach to problem-solving impressed colleagues and earned widespread professional recognition.`,
+      `The committee's ${word} decision reflected careful consideration of all available evidence and expert testimony.`,
+      `Critics described the author's narrative style as distinctly ${word}, setting it apart from conventional approaches.`,
+      `The ${word} quality of the argument made it particularly compelling to academic audiences.`,
+      `Researchers noted the ${word} pattern emerging from the data, which contradicted previous theoretical predictions.`
     ],
     'adverb': [
-      `The committee members debated ${word}, considering all possible implications of their decision.`,
-      `She approached the complex problem ${word}, demonstrating both skill and patience.`,
-      `The professor explained the theory ${word}, ensuring all students grasped the key concepts.`
+      `She spoke ${word} during the conference, articulating her position with remarkable clarity and precision.`,
+      `The attorney argued ${word}, presenting evidence that systematically dismantled the opposition's claims.`,
+      `Participants responded ${word} to the survey questions, providing researchers with valuable insights.`,
+      `The professor lectured ${word}, ensuring that students comprehended the complex theoretical concepts.`,
+      `He approached the delicate negotiation ${word}, demonstrating both tact and diplomatic skill.`
     ]
   };
   
-  const exampleSet = examples[partOfSpeech] || examples['noun'];
+  // Select appropriate example set based on part of speech
+  let exampleSet = examples[partOfSpeech];
+  if (!exampleSet) {
+    exampleSet = examples['adjective']; // Default to adjective as most versatile
+  }
+  
   return exampleSet[Math.floor(Math.random() * exampleSet.length)];
 }
 
@@ -340,11 +350,14 @@ export async function enrichWord(word) {
     }
     
     // Use smart example generator as last resort
+    console.log('⚠️ Using smart template for example...');
+    const smartExample = generateSmartExample(word, dictionaryData.partOfSpeech, dictionaryData.meaning);
+    
     return {
       meaning: dictionaryData.meaning,
       synonyms: dictionaryData.synonyms,
       antonyms: dictionaryData.antonyms,
-      example: generateSmartExample(word, dictionaryData.partOfSpeech, dictionaryData.meaning),
+      example: smartExample,
       difficulty: determineDifficulty(word, dictionaryData.meaning)
     };
   }
@@ -366,11 +379,21 @@ export async function enrichWord(word) {
   
   // Step 3: Everything failed, return better fallback
   console.log('⚠️ Using fallback data');
+  
+  // Create a more intelligent fallback
+  const fallbackExamples = [
+    `The term "${word}" frequently appears in advanced academic texts and standardized test materials.`,
+    `Scholars have extensively analyzed the usage and implications of "${word}" in contemporary discourse.`,
+    `Understanding "${word}" requires careful consideration of both its literal meaning and contextual applications.`,
+    `The concept represented by "${word}" plays an important role in various academic disciplines.`,
+    `Mastery of terms like "${word}" significantly enhances one's performance on graduate-level examinations.`
+  ];
+  
   return {
-    meaning: `A GRE-level vocabulary word (complete definition temporarily unavailable - please check spelling and try again)`,
+    meaning: `An advanced vocabulary term commonly found in GRE materials (detailed definition temporarily unavailable - please verify spelling or try again)`,
     synonyms: [],
     antonyms: [],
-    example: `Mastering words like "${word}" requires understanding both their denotative meanings and connotative implications in academic contexts.`,
+    example: fallbackExamples[Math.floor(Math.random() * fallbackExamples.length)],
     difficulty: 'medium'
   };
 }
