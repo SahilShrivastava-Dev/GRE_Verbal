@@ -1,0 +1,22 @@
+If the current model isn't working well, try these alternatives in your .env file:
+
+# Current - Xiaomi Mimo v2 Flash (RECOMMENDED: Very fast, optimized for speed)
+OPENROUTER_MODEL=xiaomi/mimo-v2-flash:free
+
+# Alternative 1 - Google Gemma 2 (Good with JSON, fast)
+OPENROUTER_MODEL=google/gemma-2-9b-it:free
+
+# Alternative 2 - Mistral 7B (Fast, general purpose)
+OPENROUTER_MODEL=mistralai/mistral-7b-instruct:free
+
+# Alternative 3 - Meta LLaMA 3.1 (Very good quality)
+OPENROUTER_MODEL=meta-llama/llama-3.1-8b-instruct:free
+
+# Alternative 4 - Nous Hermes (Good for structured output)
+OPENROUTER_MODEL=nousresearch/nous-hermes-2-mistral-7b-dpo:free
+
+# Alternative 5 - Qwen (Good multilingual support)
+OPENROUTER_MODEL=qwen/qwen-2-7b-instruct:free
+
+Just change the OPENROUTER_MODEL line in backend/.env and restart the server!
+
