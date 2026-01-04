@@ -183,43 +183,65 @@ router.get('/daily', async (req, res) => {
     const quizWords = sortedWords.slice(0, Math.min(10, allWords.length));
     const questions = [];
 
+    // Filter words that can be used for the selected quiz type
+    let eligibleWords = [];
+    
+    if (type === 'synonym') {
+      // Only include words with synonyms
+      eligibleWords = quizWords.filter(w => w.synonyms && w.synonyms.length > 0);
+    } else if (type === 'antonym') {
+      // Only include words with antonyms
+      eligibleWords = quizWords.filter(w => w.antonyms && w.antonyms.length > 0);
+    } else {
+      // For mixed, meaning, and completion - all words are eligible
+      eligibleWords = quizWords;
+    }
+
+    // If not enough eligible words for the specific type, return error
+    if (type !== 'mixed' && type !== 'meaning' && eligibleWords.length < 4) {
+      return res.status(400).json({
+        success: false,
+        message: `Not enough words with ${type}s in your vocabulary. You need at least 4 words with ${type}s. Currently you have: ${eligibleWords.length}. Try adding more words or choose a different quiz type.`
+      });
+    }
+
+    // Use eligible words or all words for mixed/meaning types
+    const wordsForQuiz = eligibleWords.length >= 4 ? eligibleWords : quizWords;
+
     // Generate questions based on type
-    for (const wordData of quizWords) {
+    for (const wordData of wordsForQuiz) {
       let question = null;
-      let attempts = 0;
-      const maxAttempts = 3;
 
       // Determine quiz type for this question
       let questionType = type;
       if (type === 'mixed') {
-        const types = ['meaning', 'synonym', 'antonym', 'completion'];
+        // For mixed, try different types based on word availability
+        const types = [];
+        types.push('meaning'); // Always available
+        if (wordData.synonyms && wordData.synonyms.length > 0) types.push('synonym');
+        if (wordData.antonyms && wordData.antonyms.length > 0) types.push('antonym');
+        types.push('completion'); // Always available
         questionType = types[Math.floor(Math.random() * types.length)];
       }
 
-      // Try to generate appropriate question type
-      while (!question && attempts < maxAttempts) {
-        switch (questionType) {
-          case 'synonym':
-            question = generateSynonymQuestion(wordData.word, wordData, allWords);
-            if (!question) questionType = 'meaning'; // Fallback
-            break;
-          
-          case 'antonym':
-            question = generateAntonymQuestion(wordData.word, wordData, allWords);
-            if (!question) questionType = 'meaning'; // Fallback
-            break;
-          
-          case 'completion':
-            question = generateCompletionQuestion(wordData.word, wordData, allWords);
-            if (!question) questionType = 'meaning'; // Fallback
-            break;
-          
-          case 'meaning':
-          default:
-            question = await generateQuizQuestion(wordData.word, wordData, allWords);
-            break;
-        }
-        attempts++;
+      // Generate question of the specified type
+      switch (questionType) {
+        case 'synonym':
+          question = generateSynonymQuestion(wordData.word, wordData, allWords);
+          break;
+        
+        case 'antonym':
+          question = generateAntonymQuestion(wordData.word, wordData, allWords);
+          break;
+        
+        case 'completion':
+          question = generateCompletionQuestion(wordData.word, wordData, allWords);
+          break;
+        
+        case 'meaning':
+        default:
+          question = await generateQuizQuestion(wordData.word, wordData, allWords);
+          break;
       }
 
       if (question) {
