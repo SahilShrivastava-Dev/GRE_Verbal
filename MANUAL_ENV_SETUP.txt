@@ -1,0 +1,62 @@
+# Manual .env Setup Instructions
+
+## IMPORTANT: Keep Your API Key Private!
+
+This file contains NO API keys. Follow these steps to set up your environment:
+
+### Step 1: Get Your API Key
+1. Go to: https://openrouter.ai/keys
+2. Create a new API key
+3. Copy it (it starts with: sk-or-v1-...)
+
+### Step 2: Create .env File
+1. Open `backend` folder
+2. Create a new file named `.env` (with the dot)
+3. Add these three lines (replace YOUR_KEY with your actual key):
+
+```
+PORT=5000
+OPENROUTER_API_KEY=YOUR_KEY_HERE
+OPENROUTER_MODEL=xiaomi/mimo-v2-flash:free
+```
+
+### Step 3: Verify .env is Protected
+- Check that `backend/.env` is listed in `.gitignore`
+- NEVER commit the `.env` file to git
+- NEVER share your API key in any file that gets committed
+
+### Step 4: Restart Backend
+```bash
+cd backend
+npm start
+```
+
+---
+
+## ⚠️ CRITICAL SECURITY RULES
+
+❌ NEVER put API keys in:
+- .bat files
+- .sh files
+- .md files
+- .txt files
+- Any file tracked by git
+
+✅ ONLY put API keys in:
+- .env files (which are in .gitignore)
+- Environment variables
+- Secure password managers
+
+---
+
+## If You Exposed a Key by Accident
+
+1. Go to OpenRouter and delete the exposed key immediately
+2. Create a new key
+3. Update your local `.env` file only
+4. Never commit `.env` to git
+
+---
+
+**Remember: Your `.env` file should NEVER be on GitHub!**
+
