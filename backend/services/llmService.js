@@ -93,11 +93,45 @@ async function enhanceWithAI(word, dictionaryData = null) {
   let prompt;
   
   if (dictionaryData && dictionaryData.example) {
-    // Dictionary has good data, just return it
-    return null;
+    // Dictionary has good data, check if definition needs expansion
+    const definitionLength = dictionaryData.meaning.split(' ').length;
+    if (definitionLength < 15) {
+      // Definition too short, enhance it
+      return null; // Will trigger enhancement
+    }
+    return null; // Good definition and example, no enhancement needed
   } else if (dictionaryData) {
-    // Dictionary has definition but needs better example
-    prompt = `You are a GRE vocabulary expert. For the word "${word}", create a sophisticated example sentence.
+    // Dictionary has definition but needs enhancement
+    const isShortDefinition = dictionaryData.meaning.split(' ').length < 15;
+    
+    if (isShortDefinition) {
+      // Definition is too short, expand it + add example
+      prompt = `You are a GRE vocabulary expert. Enhance the definition for "${word}" to make it more comprehensive like Google Dictionary.
+
+Word: ${word}
+Part of Speech: ${dictionaryData.partOfSpeech}
+Current Definition: ${dictionaryData.meaning}
+
+Task 1 - EXPAND THE DEFINITION (20-40 words):
+- Keep the core meaning but add depth and context
+- Explain nuances and usage
+- Make it educational and comprehensive like Google Dictionary
+- DON'T use the word itself
+
+Task 2 - CREATE EXAMPLE:
+- Sophisticated GRE-level sentence (15-25 words)
+- Academic/intellectual context
+- Natural usage
+
+EXAMPLE OF EXPANSION:
+Short: "pragmatic: dealing with things practically"
+Expanded: "pragmatic: dealing with things sensibly and realistically in a way that is based on practical rather than theoretical considerations; focusing on achieving concrete results through efficient means"
+
+Return ONLY valid JSON:
+{"meaning":"EXPANDED comprehensive definition (20-40 words)","example":"sophisticated sentence here","difficulty":"easy/medium/hard"}`;
+    } else {
+      // Definition is good, just need example
+      prompt = `You are a GRE vocabulary expert. For the word "${word}", create a sophisticated example sentence.
 
 Word: ${word}
 Part of Speech: ${dictionaryData.partOfSpeech}
@@ -119,25 +153,36 @@ Now create ONE sophisticated sentence for "${word}".
 
 Return ONLY valid JSON (no markdown, no code blocks):
 {"example":"your sentence here","difficulty":"easy/medium/hard"}`;
+    }
   } else {
     // No dictionary data, AI creates everything
-    prompt = `You are a GRE vocabulary expert. Create a complete, comprehensive entry for "${word}".
+    prompt = `You are a GRE vocabulary expert. Create a complete, comprehensive entry for "${word}" in the style of Google Dictionary.
 
-REQUIREMENTS:
-1. Definition: Clear, non-circular (DON'T use the word itself), GRE-appropriate
-2. If multiple meanings exist, include the most common ones separated by " | "
-3. Synonyms: 3-5 accurate synonyms
-4. Antonyms: 2-3 antonyms (if applicable)
-5. Example: Sophisticated sentence (15-25 words) in academic context
-6. Difficulty: Assess as easy/medium/hard for GRE students
+REQUIREMENTS FOR DEFINITION:
+- Write a DETAILED, COMPREHENSIVE definition (20-40 words minimum)
+- Explain the concept fully, don't just give a short synonym
+- Include nuances, connotations, and usage context
+- Be clear and educational, like explaining to a GRE student
+- DON'T use the word itself in the definition (no circular logic)
 
-AVOID:
-- Circular definitions (don't use the word to define itself)
-- Generic examples
-- Overly simple language
+EXAMPLE OF GOOD DEFINITIONS (like Google):
+❌ BAD: "ephemeral: lasting briefly"
+✅ GOOD: "ephemeral: lasting for a very short time; transient and fleeting in nature, often used to describe things that exist only temporarily before disappearing or fading away"
+
+❌ BAD: "ameliorate: to improve"
+✅ GOOD: "ameliorate: to make something bad or unsatisfactory better or more tolerable; to improve a situation or condition that was previously problematic or difficult"
+
+❌ BAD: "pragmatic: practical approach"
+✅ GOOD: "pragmatic: dealing with things sensibly and realistically in a way that is based on practical rather than theoretical considerations; focusing on achieving results rather than following abstract principles"
+
+Now create for "${word}":
+- Synonyms: 3-5 accurate synonyms
+- Antonyms: 2-3 antonyms (if applicable)
+- Example: Sophisticated sentence (15-25 words) in academic context
+- Difficulty: easy/medium/hard for GRE students
 
 Return ONLY valid JSON:
-{"meaning":"clear, comprehensive definition","synonyms":["syn1","syn2","syn3","syn4"],"antonyms":["ant1","ant2"],"example":"Sophisticated academic sentence using ${word} naturally","difficulty":"medium"}`;
+{"meaning":"DETAILED comprehensive definition like Google Dictionary (20-40 words)","synonyms":["syn1","syn2","syn3","syn4"],"antonyms":["ant1","ant2"],"example":"Sophisticated academic sentence","difficulty":"medium"}`;
   }
 
   try {
@@ -271,17 +316,26 @@ export async function enrichWord(word) {
       };
     }
     
-    // Dictionary lacks good example, enhance with AI
-    console.log('🤖 Enhancing with AI for better example...');
+    // Dictionary lacks good example OR has short definition, enhance with AI
+    console.log('🤖 Enhancing with AI for better content...');
     const aiEnhancement = await enhanceWithAI(word, dictionaryData);
     
-    if (aiEnhancement && aiEnhancement.example && aiEnhancement.example.length > 20) {
+    if (aiEnhancement) {
+      // Use AI-enhanced definition if provided and longer
+      const finalMeaning = (aiEnhancement.meaning && aiEnhancement.meaning.split(' ').length > 15)
+        ? aiEnhancement.meaning
+        : dictionaryData.meaning;
+      
+      const finalExample = (aiEnhancement.example && aiEnhancement.example.length > 20)
+        ? aiEnhancement.example
+        : generateSmartExample(word, dictionaryData.partOfSpeech, finalMeaning);
+      
       return {
-        meaning: dictionaryData.meaning,
+        meaning: finalMeaning,
         synonyms: dictionaryData.synonyms,
         antonyms: dictionaryData.antonyms,
-        example: aiEnhancement.example,
-        difficulty: aiEnhancement.difficulty || determineDifficulty(word, dictionaryData.meaning)
+        example: finalExample,
+        difficulty: aiEnhancement.difficulty || determineDifficulty(word, finalMeaning)
       };
     }
     
