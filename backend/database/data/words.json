@@ -2,7 +2,7 @@
   {
     "id": "1767539875445",
     "word": "trifling",
-    "meaning": "The act of one who trifles; frivolous behaviour.",
+    "meaning": "Of little value, importance, or significance; trivial and insignificant in nature. Used to describe matters, tasks, or concerns that are frivolous, inconsequential, and not worth serious attention or effort, often implying a dismissive or contemptuous attitude toward them.",
     "synonyms": [
       "inconsequential",
       "petty",
@@ -21,7 +21,7 @@
   {
     "id": "1767539891777",
     "word": "precariously",
-    "meaning": "In a precarious manner; dangerously",
+    "meaning": "In an unstable, insecure, or risky manner; lacking firmness, steadiness, or safety; describing a situation, position, or action that is full of uncertainty and likely to result in failure, danger, or disaster without warning",
     "synonyms": [],
     "antonyms": [],
     "example": "The climber precariously balanced on the narrow ledge, with a sheer drop of thousands of feet below.",
@@ -36,7 +36,7 @@
   {
     "id": "1767540076510",
     "word": "exacerbated",
-    "meaning": "To make worse (a problem, bad situation, negative feeling, etc.); aggravate; exasperate.",
+    "meaning": "To make a problem, negative situation, or hostile condition more severe, intense, or serious; to increase the bitterness or violence of something already undesirable; distinct from merely annoying as it implies worsening an existing state",
     "synonyms": [],
     "antonyms": [],
     "example": "Researchers noted the exacerbated pattern emerging from the data, which contradicted previous theoretical predictions.",
@@ -51,7 +51,7 @@
   {
     "id": "1767540405903",
     "word": "ameliorated",
-    "meaning": "To make better, or improve, something perceived to be in a negative condition.",
+    "meaning": "To make something bad or unsatisfactory better; to improve a negative condition or situation, often through deliberate intervention or gradual change; to alleviate hardship or enhance quality without completely resolving underlying issues",
     "synonyms": [],
     "antonyms": [
       "deteriorate",
@@ -69,7 +69,7 @@
   {
     "id": "1767540430630",
     "word": "ersatz",
-    "meaning": "Something made in imitation; an effigy or substitute",
+    "meaning": "Made as a substitute or imitation, typically inferior and inferior in quality to the original; artificial, synthetic, or inferior in nature, often implying a cheap or unsatisfactory replacement for something genuine or authentic; commonly used to describe products or materials",
     "synonyms": [
       "imitation",
       "knock off",
@@ -90,7 +90,7 @@
   {
     "id": "1767540546688",
     "word": "mendacious",
-    "meaning": "(of a person) Lying, untruthful or dishonest.",
+    "meaning": "Characterized by a habitual tendency to tell falsehoods or deceive; deliberately untruthful in speech or writing; often used to describe statements, narratives, or individuals that are intentionally misleading and lack integrity or credibility.",
     "synonyms": [],
     "antonyms": [],
     "example": "After the journalist exposed the politician's mendacious claims about his financial dealings, the public's trust in his administration plummeted.",
@@ -105,7 +105,7 @@
   {
     "id": "1767540564673",
     "word": "nugatory",
-    "meaning": "Trivial, trifling or of little importance.",
+    "meaning": "Having no real or substantial value, force, or effect; rendered completely useless, ineffective, or futile by some intervening circumstance; often used to describe laws, agreements, or efforts that are nullified or made pointless by later events or conditions.",
     "synonyms": [],
     "antonyms": [],
     "example": "The manager dismissed the employee's complaints about the office color scheme as nugatory compared to the company's financial problems.",
@@ -120,7 +120,7 @@
   {
     "id": "1767540678471",
     "word": "munificient",
-    "meaning": "Extremely generous; showing great liberality in giving.",
+    "meaning": "Characterized by extremely generous and lavish giving; showing great liberality in bestowing gifts, donations, or favors, often exceeding what is expected or necessary; implies a noble, open-handed spirit that gives freely without expectation of return, distinguishing itself from mere generosity by its sheer scale and magnanimity",
     "synonyms": [
       "liberal",
       "bountiful",
@@ -143,7 +143,7 @@
   {
     "id": "1767540719924",
     "word": "mimetic",
-    "meaning": "Something mimetic or imitative.",
+    "meaning": "Relating to or characterized by imitation, especially of forms or styles in art and literature; in biology, pertaining to protective resemblance or camouflage in organisms; in anthropology, describing cultural phenomena that spread through imitation among groups",
     "synonyms": [],
     "antonyms": [
       "nonmimetic"
@@ -200,7 +200,7 @@
   {
     "id": "1767540782684",
     "word": "shabby",
-    "meaning": "Torn or worn; unkempt.",
+    "meaning": "In poor condition or repair due to wear, neglect, or age; appearing run-down, dilapidated, or threadbare. It can also describe behavior that is mean, unfair, or dishonorable, implying a lack of proper standards or quality in either physical state or moral conduct.",
     "synonyms": [],
     "antonyms": [],
     "example": "The author's exploration of shabby provided readers with profound insights into human nature and social dynamics.",
@@ -239,7 +239,7 @@
   {
     "id": "1767541711618",
     "word": "obscure",
-    "meaning": "To render obscure; to darken; to make dim; to keep in the dark; to hide; to make less visible, intelligible, legible, glorious, beautiful, or illustrious.",
+    "meaning": "To conceal or make something unclear and difficult to understand, often by using complex language or by keeping it hidden from public view; to reduce the visibility or prominence of something, thereby preventing it from being easily perceived or recognized by others.",
     "synonyms": [
       "becloud",
       "bedarken",
@@ -305,7 +305,7 @@
   {
     "id": "1767541897897",
     "word": "eminent",
-    "meaning": "High, lofty.",
+    "meaning": "Standing out in a high position; distinguished and respected within a specific field or profession due to exceptional achievements, expertise, or character; possessing superior status or prominence that commands admiration and authority among peers and the public.",
     "synonyms": [
       "prominent",
       "towering",
@@ -326,7 +326,7 @@
   {
     "id": "1767541947441",
     "word": "notoriety",
-    "meaning": "The condition of being infamous or notorious.",
+    "meaning": "The state of being widely known and recognized, but specifically for negative, scandalous, or unfavorable actions, qualities, or achievements; it implies a reputation for infamy rather than admiration, often resulting from public disgrace or criminal behavior.",
     "synonyms": [
       "ill fame",
       "infamy"
@@ -344,7 +344,7 @@
   {
     "id": "1767542045314",
     "word": "tumultuous",
-    "meaning": "Characterized by loud, confused noise.",
+    "meaning": "Marked by disorder, unrest, and loud uproar; describing situations, crowds, or events that are chaotic, turbulent, and emotionally intense; often implying a lack of control or predictability in both physical environments and interpersonal relationships.",
     "synonyms": [
       "noisy",
       "uproarious",
@@ -367,7 +367,7 @@
   {
     "id": "1767542081187",
     "word": "providential",
-    "meaning": "Pertaining to divine providence.",
+    "meaning": "Occurring at a favorable time; resulting from or as if from divine intervention or guidance; characterized by being timely, advantageous, and seemingly guided by a higher power to produce a fortunate outcome, often in a way that appears beyond mere coincidence.",
     "synonyms": [
       "fortunate",
       "heaven-sent",
@@ -387,7 +387,7 @@
   {
     "id": "1767546677017",
     "word": "eccentric",
-    "meaning": "One who does not behave like others.",
+    "meaning": "A person who exhibits unconventional, peculiar, or nonconformist behavior and habits that deviate markedly from established social norms; often characterized by idiosyncratic tastes, actions, or appearances that are viewed as strange, whimsical, or amusingly odd by others",
     "synonyms": [
       "crank",
       "odd duck",
@@ -410,7 +410,7 @@
   {
     "id": "1767546730716",
     "word": "derivative",
-    "meaning": "Something derived.",
+    "meaning": "In mathematics, a quantity representing the rate of change of a function with respect to its variable; in finance, a contract whose value depends on underlying assets; in general use, something lacking originality because it is imitative or unoriginal.",
     "synonyms": [
       "contingent claim",
       "derived function",
