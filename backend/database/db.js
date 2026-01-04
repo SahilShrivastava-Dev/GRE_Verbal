@@ -167,5 +167,8 @@ export const QuizAttemptsDB = {
 // Initialize on module load
 initDatabase();
 
-export default { WordsDB, QuizAttemptsDB };
+// Export with both naming conventions for compatibility
+export const words = WordsDB;
+export const quizAttempts = QuizAttemptsDB;
+export default { WordsDB, QuizAttemptsDB, words: WordsDB, quizAttempts: QuizAttemptsDB };
 
