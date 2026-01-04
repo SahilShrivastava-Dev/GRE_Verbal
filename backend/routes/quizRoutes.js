@@ -1,20 +1,11 @@
 import express from 'express';
 import * as db from '../database/db.js';
-import { generateQuizQuestion } from '../services/llmService.js';
+import { generateQuizQuestion, generateSynonymOptions, generateAntonymOptions } from '../services/llmService.js';
 
 const router = express.Router();
 
-// Quiz types
-const QUIZ_TYPES = {
-  MEANING: 'meaning',           // What does this word mean?
-  SYNONYM: 'synonym',           // Select the synonym
-  ANTONYM: 'antonym',           // Select the antonym
-  TEXT_COMPLETION: 'completion', // Fill in the blank
-  MIXED: 'mixed'                // Random mix of all types
-};
-
-// Generate a synonym quiz question
-function generateSynonymQuestion(word, wordData, allWords) {
+// Generate a synonym quiz question with AI enhancement
+async function generateSynonymQuestion(word, wordData, allWords) {
   if (!wordData.synonyms || wordData.synonyms.length === 0) {
     return null; // Skip if no synonyms
   }
@@ -22,7 +13,25 @@ function generateSynonymQuestion(word, wordData, allWords) {
   // Get correct synonym
   const correctSynonym = wordData.synonyms[0];
   
-  // Get wrong options from other words' synonyms
+  // Try to use AI to generate better distractor options
+  const aiOptions = await generateSynonymOptions(word, wordData, correctSynonym);
+  
+  if (aiOptions && aiOptions.length >= 3) {
+    // Use AI-generated options
+    const options = [correctSynonym, ...aiOptions].sort(() => Math.random() - 0.5);
+    const correctIndex = options.indexOf(correctSynonym);
+    
+    return {
+      word: word,
+      type: 'synonym',
+      question: `Which word is a SYNONYM (similar meaning) of "${word}"?`,
+      hint: `Meaning: ${wordData.meaning.substring(0, 100)}...`,
+      options: options,
+      correctIndex: correctIndex
+    };
+  }
+  
+  // Fallback: Get wrong options from other words' synonyms
   const wrongOptions = [];
   const otherWords = allWords.filter(w => w.word !== word);
   
@@ -33,11 +42,19 @@ function generateSynonymQuestion(word, wordData, allWords) {
   }
   
   // Add some general distractors
-  const generalDistractors = ['ubiquitous', 'ephemeral', 'pragmatic', 'verbose', 'benevolent', 'malicious', 'obscure', 'lucid'];
+  const generalDistractors = [
+    'ubiquitous', 'ephemeral', 'pragmatic', 'verbose', 'benevolent', 
+    'malicious', 'obscure', 'lucid', 'astute', 'frivolous',
+    'candid', 'zealous', 'tenuous', 'verbose', 'stoic'
+  ];
   wrongOptions.push(...generalDistractors);
   
   // Shuffle and pick 3 unique wrong options
-  const shuffled = wrongOptions.filter(opt => opt !== correctSynonym && !wordData.synonyms.includes(opt));
+  const shuffled = wrongOptions.filter(opt => 
+    opt.toLowerCase() !== correctSynonym.toLowerCase() && 
+    opt.toLowerCase() !== word.toLowerCase() &&
+    !wordData.synonyms.map(s => s.toLowerCase()).includes(opt.toLowerCase())
+  );
   const uniqueWrong = [...new Set(shuffled)].sort(() => Math.random() - 0.5).slice(0, 3);
   
   if (uniqueWrong.length < 3) {
@@ -51,15 +68,15 @@ function generateSynonymQuestion(word, wordData, allWords) {
   return {
     word: word,
     type: 'synonym',
-    question: `Which word is a SYNONYM of "${word}"?`,
-    hint: `Meaning: ${wordData.meaning}`,
+    question: `Which word is a SYNONYM (similar meaning) of "${word}"?`,
+    hint: `Meaning: ${wordData.meaning.substring(0, 100)}...`,
     options: options,
     correctIndex: correctIndex
   };
 }
 
-// Generate an antonym quiz question
-function generateAntonymQuestion(word, wordData, allWords) {
+// Generate an antonym quiz question with AI enhancement
+async function generateAntonymQuestion(word, wordData, allWords) {
   if (!wordData.antonyms || wordData.antonyms.length === 0) {
     return null; // Skip if no antonyms
   }
@@ -67,7 +84,25 @@ function generateAntonymQuestion(word, wordData, allWords) {
   // Get correct antonym
   const correctAntonym = wordData.antonyms[0];
   
-  // Get wrong options (synonyms and other words' antonyms)
+  // Try to use AI to generate better distractor options
+  const aiOptions = await generateAntonymOptions(word, wordData, correctAntonym);
+  
+  if (aiOptions && aiOptions.length >= 3) {
+    // Use AI-generated options
+    const options = [correctAntonym, ...aiOptions].sort(() => Math.random() - 0.5);
+    const correctIndex = options.indexOf(correctAntonym);
+    
+    return {
+      word: word,
+      type: 'antonym',
+      question: `Which word is an ANTONYM (opposite meaning) of "${word}"?`,
+      hint: `Meaning: ${wordData.meaning.substring(0, 100)}...`,
+      options: options,
+      correctIndex: correctIndex
+    };
+  }
+  
+  // Fallback: Get wrong options (synonyms and other words' antonyms)
   const wrongOptions = [...(wordData.synonyms || [])];
   
   const otherWords = allWords.filter(w => w.word !== word);
@@ -77,8 +112,19 @@ function generateAntonymQuestion(word, wordData, allWords) {
     }
   }
   
+  // Add general distractors
+  const generalDistractors = [
+    'similar', 'different', 'opposite', 'related', 'unrelated',
+    'positive', 'negative', 'neutral', 'beneficial', 'harmful'
+  ];
+  wrongOptions.push(...generalDistractors);
+  
   // Shuffle and pick 3 unique wrong options
-  const shuffled = wrongOptions.filter(opt => opt !== correctAntonym && !wordData.antonyms.includes(opt));
+  const shuffled = wrongOptions.filter(opt => 
+    opt.toLowerCase() !== correctAntonym.toLowerCase() && 
+    opt.toLowerCase() !== word.toLowerCase() &&
+    !wordData.antonyms.map(a => a.toLowerCase()).includes(opt.toLowerCase())
+  );
   const uniqueWrong = [...new Set(shuffled)].sort(() => Math.random() - 0.5).slice(0, 3);
   
   if (uniqueWrong.length < 3) {
@@ -92,8 +138,8 @@ function generateAntonymQuestion(word, wordData, allWords) {
   return {
     word: word,
     type: 'antonym',
-    question: `Which word is an ANTONYM (opposite) of "${word}"?`,
-    hint: `Meaning: ${wordData.meaning}`,
+    question: `Which word is an ANTONYM (opposite meaning) of "${word}"?`,
+    hint: `Meaning: ${wordData.meaning.substring(0, 100)}...`,
     options: options,
     correctIndex: correctIndex
   };
@@ -136,8 +182,8 @@ function generateCompletionQuestion(word, wordData, allWords) {
     word: word,
     type: 'completion',
     question: `Choose the word that best completes the sentence:`,
-    sentence: sentence.replace('_____', '_____'),
-    hint: `Meaning: ${wordData.meaning}`,
+    sentence: sentence,
+    hint: `Meaning: ${wordData.meaning.substring(0, 100)}...`,
     options: options,
     correctIndex: correctIndex
   };
@@ -179,9 +225,8 @@ router.get('/daily', async (req, res) => {
       return a.timesQuizzed - b.timesQuizzed;
     });
 
-    // Select 10 words for quiz (or all if less than 10)
+    // Select up to 10 words for quiz
     const quizWords = sortedWords.slice(0, Math.min(10, allWords.length));
-    const questions = [];
 
     // Filter words that can be used for the selected quiz type
     let eligibleWords = [];
@@ -189,24 +234,27 @@ router.get('/daily', async (req, res) => {
     if (type === 'synonym') {
       // Only include words with synonyms
       eligibleWords = quizWords.filter(w => w.synonyms && w.synonyms.length > 0);
+      console.log(`📊 Synonym quiz: Found ${eligibleWords.length} words with synonyms out of ${quizWords.length} total`);
     } else if (type === 'antonym') {
       // Only include words with antonyms
       eligibleWords = quizWords.filter(w => w.antonyms && w.antonyms.length > 0);
+      console.log(`📊 Antonym quiz: Found ${eligibleWords.length} words with antonyms out of ${quizWords.length} total`);
     } else {
       // For mixed, meaning, and completion - all words are eligible
       eligibleWords = quizWords;
     }
 
     // If not enough eligible words for the specific type, return error
-    if (type !== 'mixed' && type !== 'meaning' && eligibleWords.length < 4) {
+    if ((type === 'synonym' || type === 'antonym') && eligibleWords.length < 4) {
       return res.status(400).json({
         success: false,
         message: `Not enough words with ${type}s in your vocabulary. You need at least 4 words with ${type}s. Currently you have: ${eligibleWords.length}. Try adding more words or choose a different quiz type.`
       });
     }
 
-    // Use eligible words or all words for mixed/meaning types
-    const wordsForQuiz = eligibleWords.length >= 4 ? eligibleWords : quizWords;
+    // Use eligible words
+    const wordsForQuiz = eligibleWords;
+    const questions = [];
 
     // Generate questions based on type
     for (const wordData of wordsForQuiz) {
@@ -224,37 +272,58 @@ router.get('/daily', async (req, res) => {
         questionType = types[Math.floor(Math.random() * types.length)];
       }
 
-      // Generate question of the specified type
-      switch (questionType) {
-        case 'synonym':
-          question = generateSynonymQuestion(wordData.word, wordData, allWords);
-          break;
-        
-        case 'antonym':
-          question = generateAntonymQuestion(wordData.word, wordData, allWords);
-          break;
-        
-        case 'completion':
-          question = generateCompletionQuestion(wordData.word, wordData, allWords);
-          break;
-        
-        case 'meaning':
-        default:
-          question = await generateQuizQuestion(wordData.word, wordData, allWords);
-          break;
-      }
+      console.log(`🎯 Generating ${questionType} question for word: ${wordData.word}`);
 
-      if (question) {
-        questions.push(question);
+      // Generate question of the specified type
+      try {
+        switch (questionType) {
+          case 'synonym':
+            question = await generateSynonymQuestion(wordData.word, wordData, allWords);
+            if (!question) {
+              console.log(`⚠️ Failed to generate synonym question for ${wordData.word}`);
+            }
+            break;
+          
+          case 'antonym':
+            question = await generateAntonymQuestion(wordData.word, wordData, allWords);
+            if (!question) {
+              console.log(`⚠️ Failed to generate antonym question for ${wordData.word}`);
+            }
+            break;
+          
+          case 'completion':
+            question = generateCompletionQuestion(wordData.word, wordData, allWords);
+            if (!question) {
+              console.log(`⚠️ Failed to generate completion question for ${wordData.word}`);
+            }
+            break;
+          
+          case 'meaning':
+          default:
+            question = await generateQuizQuestion(wordData.word, wordData, allWords);
+            if (!question) {
+              console.log(`⚠️ Failed to generate meaning question for ${wordData.word}`);
+            }
+            break;
+        }
+
+        if (question) {
+          console.log(`✅ Successfully generated ${question.type} question for ${wordData.word}`);
+          questions.push(question);
+        }
+      } catch (error) {
+        console.error(`❌ Error generating question for ${wordData.word}:`, error.message);
       }
     }
 
     if (questions.length === 0) {
       return res.status(500).json({
         success: false,
-        message: 'Could not generate quiz questions. Please try again.'
+        message: 'Could not generate quiz questions. Please try again or choose a different quiz type.'
       });
     }
+
+    console.log(`✅ Generated ${questions.length} questions for ${type} quiz`);
 
     res.json({
       success: true,

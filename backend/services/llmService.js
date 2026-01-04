@@ -538,3 +538,151 @@ function generateImprovedQuizQuestion(word, wordData, allWords) {
 function generateBasicQuizQuestion(word, wordData, allWords) {
   return generateImprovedQuizQuestion(word, wordData, allWords);
 }
+
+// AI-powered synonym options generator
+export async function generateSynonymOptions(word, wordData, correctSynonym) {
+  if (!OPENROUTER_API_KEY) {
+    return null;
+  }
+
+  const prompt = `You are a GRE vocabulary expert. Generate 3 PLAUSIBLE but INCORRECT synonym options for the word "${word}".
+
+Word: "${word}"
+Correct Synonym: "${correctSynonym}"
+Meaning: ${wordData.meaning}
+
+Requirements for the 3 WRONG options:
+1. They should be real English words (GRE-level vocabulary)
+2. They should sound plausible as synonyms but are NOT actually synonyms
+3. They should be different from "${correctSynonym}"
+4. They should NOT be actual synonyms of "${word}"
+5. Make them challenging - similar in tone or context but different meaning
+
+Example:
+Word: "ameliorate" (to make better)
+Correct Synonym: "improve"
+Wrong options: ["deteriorate", "complicate", "maintain"]
+
+Now generate 3 wrong options for "${word}".
+
+Return ONLY valid JSON (no markdown, no explanations):
+{"options":["word1","word2","word3"]}`;
+
+  try {
+    const response = await axios.post(
+      'https://openrouter.ai/api/v1/chat/completions',
+      {
+        model: OPENROUTER_MODEL,
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a GRE test creator. Generate challenging distractor options. Return ONLY valid JSON.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 200
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'http://localhost:5000',
+          'X-Title': 'GRE Vocab Builder'
+        }
+      }
+    );
+
+    let content = response.data.choices[0].message.content.trim();
+    content = content.replace(/```json\s*/g, '').replace(/```\s*/g, '');
+    
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      const result = JSON.parse(jsonMatch[0]);
+      if (result.options && Array.isArray(result.options) && result.options.length >= 3) {
+        return result.options.slice(0, 3);
+      }
+    }
+  } catch (error) {
+    console.error('AI Synonym Options Error:', error.message);
+  }
+  
+  return null;
+}
+
+// AI-powered antonym options generator
+export async function generateAntonymOptions(word, wordData, correctAntonym) {
+  if (!OPENROUTER_API_KEY) {
+    return null;
+  }
+
+  const prompt = `You are a GRE vocabulary expert. Generate 3 PLAUSIBLE but INCORRECT antonym options for the word "${word}".
+
+Word: "${word}"
+Correct Antonym: "${correctAntonym}"
+Meaning: ${wordData.meaning}
+
+Requirements for the 3 WRONG options:
+1. They should be real English words (GRE-level vocabulary)
+2. They should sound plausible as antonyms but are NOT actually antonyms
+3. They should be different from "${correctAntonym}"
+4. They should NOT be actual antonyms of "${word}"
+5. Include the actual synonyms as distractors to make it challenging
+
+Example:
+Word: "benevolent" (kind, generous)
+Correct Antonym: "malicious"
+Wrong options: ["generous", "kind", "neutral"]
+
+Now generate 3 wrong options for "${word}".
+
+Return ONLY valid JSON (no markdown, no explanations):
+{"options":["word1","word2","word3"]}`;
+
+  try {
+    const response = await axios.post(
+      'https://openrouter.ai/api/v1/chat/completions',
+      {
+        model: OPENROUTER_MODEL,
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a GRE test creator. Generate challenging distractor options. Return ONLY valid JSON.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 200
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'http://localhost:5000',
+          'X-Title': 'GRE Vocab Builder'
+        }
+      }
+    );
+
+    let content = response.data.choices[0].message.content.trim();
+    content = content.replace(/```json\s*/g, '').replace(/```\s*/g, '');
+    
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      const result = JSON.parse(jsonMatch[0]);
+      if (result.options && Array.isArray(result.options) && result.options.length >= 3) {
+        return result.options.slice(0, 3);
+      }
+    }
+  } catch (error) {
+    console.error('AI Antonym Options Error:', error.message);
+  }
+  
+  return null;
+}

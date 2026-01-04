@@ -429,5 +429,20 @@
     "dateAdded": "2026-01-04T17:12:10.716Z",
     "createdAt": "2026-01-04T17:12:10.716Z",
     "updatedAt": "2026-01-04T17:12:10.716Z"
+  },
+  {
+    "id": "1767547375333",
+    "word": "imperceptibly",
+    "meaning": "Not noticeably; too small to be detected; too little to be perceived.",
+    "synonyms": [],
+    "antonyms": [],
+    "example": "No one noticed that he had moved imperceptibly backwards.",
+    "difficulty": "hard",
+    "timesQuizzed": 0,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T17:22:55.333Z",
+    "createdAt": "2026-01-04T17:22:55.333Z",
+    "updatedAt": "2026-01-04T17:22:55.333Z"
   }
 ]
