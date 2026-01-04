@@ -1,6 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ForceGraph2D } from 'react-force-graph-2d';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { wordAPI } from '../services/api';
+
+// Lazy load the graph component to prevent breaking the app if package isn't installed
+const ForceGraph2D = lazy(() => 
+  import('react-force-graph-2d').then(module => ({ default: module.ForceGraph2D })).catch(() => ({ default: () => null }))
+);
 
 const WordGraph = () => {
   const [words, setWords] = useState([]);
@@ -196,41 +200,50 @@ const WordGraph = () => {
           </div>
         </div>
 
-        <ForceGraph2D
-          ref={graphRef}
-          graphData={graphData}
-          width={window.innerWidth > 768 ? 1200 : window.innerWidth - 40}
-          height={600}
-          backgroundColor="#ffffff"
-          nodeLabel="name"
-          nodeColor={node => getDifficultyColor(node.difficulty)}
-          nodeCanvasObject={(node, ctx, globalScale) => {
-            const label = node.name;
-            const fontSize = 14 / globalScale;
-            ctx.font = `${fontSize}px Sans-Serif`;
-            
-            // Draw node circle
-            ctx.beginPath();
-            ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI, false);
-            ctx.fillStyle = getDifficultyColor(node.difficulty);
-            ctx.fill();
-            
-            // Draw label
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillStyle = '#1f2937';
-            ctx.fillText(label, node.x, node.y + node.val + fontSize);
-          }}
-          linkColor={link => link.type === 'synonym' ? '#3b82f6' : '#ef4444'}
-          linkWidth={2}
-          linkDirectionalParticles={2}
-          linkDirectionalParticleWidth={2}
-          linkDirectionalParticleColor={link => link.type === 'synonym' ? '#3b82f6' : '#ef4444'}
-          onNodeClick={handleNodeClick}
-          cooldownTicks={100}
-          d3AlphaDecay={0.02}
-          d3VelocityDecay={0.3}
-        />
+        <Suspense fallback={
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading graph visualization...</p>
+            </div>
+          </div>
+        }>
+          <ForceGraph2D
+            ref={graphRef}
+            graphData={graphData}
+            width={window.innerWidth > 768 ? 1200 : window.innerWidth - 40}
+            height={600}
+            backgroundColor="#ffffff"
+            nodeLabel="name"
+            nodeColor={node => getDifficultyColor(node.difficulty)}
+            nodeCanvasObject={(node, ctx, globalScale) => {
+              const label = node.name;
+              const fontSize = 14 / globalScale;
+              ctx.font = `${fontSize}px Sans-Serif`;
+              
+              // Draw node circle
+              ctx.beginPath();
+              ctx.arc(node.x, node.y, node.val, 0, 2 * Math.PI, false);
+              ctx.fillStyle = getDifficultyColor(node.difficulty);
+              ctx.fill();
+              
+              // Draw label
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillStyle = '#1f2937';
+              ctx.fillText(label, node.x, node.y + node.val + fontSize);
+            }}
+            linkColor={link => link.type === 'synonym' ? '#3b82f6' : '#ef4444'}
+            linkWidth={2}
+            linkDirectionalParticles={2}
+            linkDirectionalParticleWidth={2}
+            linkDirectionalParticleColor={link => link.type === 'synonym' ? '#3b82f6' : '#ef4444'}
+            onNodeClick={handleNodeClick}
+            cooldownTicks={100}
+            d3AlphaDecay={0.02}
+            d3VelocityDecay={0.3}
+          />
+        </Suspense>
       </div>
 
       {/* Selected Word Details */}
