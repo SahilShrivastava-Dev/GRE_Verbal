@@ -1,5 +1,5 @@
 import express from 'express';
-import { words, quizAttempts } from '../database/db.js';
+import * as db from '../database/db.js';
 import { generateQuizQuestion, generateSynonymOptions, generateAntonymOptions } from '../services/llmService.js';
 
 const router = express.Router();
@@ -194,7 +194,7 @@ router.get('/daily', async (req, res) => {
   try {
     const { type = 'mixed' } = req.query; // Quiz type from query
     
-    const allWords = await words.getAll();
+    const allWords = await db.words.getAll();
     
     if (allWords.length === 0) {
       return res.status(404).json({
@@ -358,14 +358,14 @@ router.post('/submit', async (req, res) => {
 
     // Update each word's statistics
     for (const result of results) {
-      const word = await words.findByWord(result.word);
+      const word = await db.words.findByWord(result.word);
       if (word) {
         word.timesQuizzed = (word.timesQuizzed || 0) + 1;
         if (!result.correct) {
           word.timesWrong = (word.timesWrong || 0) + 1;
         }
         word.updatedAt = new Date().toISOString();
-        await words.update(word.id, word);
+        await db.words.update(word.id, word);
       }
     }
 
@@ -383,7 +383,7 @@ router.post('/submit', async (req, res) => {
       results: results
     };
 
-    await quizAttempts.add(quizAttempt);
+    await db.quizAttempts.add(quizAttempt);
 
     res.json({
       success: true,
