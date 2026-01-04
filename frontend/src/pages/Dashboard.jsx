@@ -128,7 +128,7 @@ const Dashboard = () => {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Link to="/add-word" className="group glass-card hover:scale-105 transform transition-all cursor-pointer border-2 border-transparent hover:border-purple-400 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div className="text-center relative z-10">
@@ -153,6 +153,15 @@ const Dashboard = () => {
             <div className="text-6xl mb-4 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300">📚</div>
             <h3 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-2">Browse Words</h3>
             <p className="text-gray-600 font-medium">Review your vocabulary collection</p>
+          </div>
+        </Link>
+
+        <Link to="/word-graph" className="group glass-card hover:scale-105 transform transition-all cursor-pointer border-2 border-transparent hover:border-cyan-400 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="text-center relative z-10">
+            <div className="text-6xl mb-4 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300">🕸️</div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent mb-2">Word Network</h3>
+            <p className="text-gray-600 font-medium">Visualize word relationships</p>
           </div>
         </Link>
       </div>
