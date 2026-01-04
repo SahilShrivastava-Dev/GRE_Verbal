@@ -5,7 +5,7 @@ import Dashboard from './pages/Dashboard';
 import AddWord from './pages/AddWord';
 import VocabularyList from './pages/VocabularyList';
 import DailyQuiz from './pages/DailyQuiz';
-import WordGraph from './pages/WordGraph';
+import WordGraphTemp from './pages/WordGraphTemp';
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
           <Route path="/add-word" element={<AddWord />} />
           <Route path="/vocabulary" element={<VocabularyList />} />
           <Route path="/quiz" element={<DailyQuiz />} />
-          <Route path="/word-graph" element={<WordGraph />} />
+          <Route path="/word-graph" element={<WordGraphTemp />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>
