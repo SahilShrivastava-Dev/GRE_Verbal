@@ -21,8 +21,8 @@ export const wordAPI = {
 
 // Quiz APIs
 export const quizAPI = {
-  getDailyQuiz: () => api.get('/quiz/daily'),
-  submitQuiz: (questions, userAnswers) => api.post('/quiz/submit', { questions, userAnswers }),
+  getDailyQuiz: (type = 'mixed') => api.get(`/quiz/daily?type=${type}`),
+  submitQuiz: (data) => api.post('/quiz/submit', data),
   getHistory: (limit = 10) => api.get(`/quiz/history?limit=${limit}`),
 };
 
