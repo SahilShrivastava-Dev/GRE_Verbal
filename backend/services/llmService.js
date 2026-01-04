@@ -64,16 +64,37 @@ async function enhanceWithAI(word, dictionaryData = null) {
     return null;
   } else if (dictionaryData) {
     // Dictionary has definition but needs better example
-    prompt = `For the word "${word}" with definition "${dictionaryData.meaning}", create a GRE-style example sentence that uses the word in context. Also classify difficulty as easy, medium, or hard.
+    prompt = `Create a sophisticated, GRE-level example sentence for the word "${word}".
 
-Return ONLY valid JSON:
-{"example":"your sentence here","difficulty":"medium"}`;
+Word: ${word}
+Definition: ${dictionaryData.meaning}
+
+Requirements:
+- Use the word naturally in an academic/formal context
+- The sentence should demonstrate the meaning clearly
+- Make it similar to sentences found on the GRE exam
+- 15-25 words long
+- Show intellectual/academic usage
+
+Example of GOOD sentence:
+Word: "ameliorate"
+"The new policies helped ameliorate the dire economic conditions affecting the region's most vulnerable citizens."
+
+Now create one for "${word}". Return ONLY valid JSON:
+{"example":"your sophisticated sentence here using the word naturally","difficulty":"medium"}`;
   } else {
     // No dictionary data, AI creates everything
-    prompt = `You are a GRE vocabulary expert. For the word "${word}", provide a complete entry:
+    prompt = `You are a GRE vocabulary expert. Create a complete vocabulary entry for "${word}".
 
-Return ONLY valid JSON in this format:
-{"meaning":"clear GRE-level definition","synonyms":["syn1","syn2","syn3"],"antonyms":["ant1","ant2"],"example":"GRE-style sentence using the word","difficulty":"easy/medium/hard"}`;
+Return ONLY valid JSON with:
+- A clear, GRE-level definition
+- 3-5 synonyms
+- 2-3 antonyms  
+- A sophisticated example sentence (15-25 words, academic context, natural usage)
+- Difficulty level
+
+Format:
+{"meaning":"clear definition","synonyms":["syn1","syn2","syn3"],"antonyms":["ant1","ant2"],"example":"Sophisticated sentence using ${word} naturally in academic context","difficulty":"medium"}`;
   }
 
   try {
@@ -164,12 +185,20 @@ export async function enrichWord(word) {
       };
     }
     
-    // AI failed, use dictionary data with generated example
+    // AI failed, use dictionary data with better generated example
+    const betterExamples = {
+      'noun': `The concept of ${word} has been extensively studied in academic literature.`,
+      'verb': `Scholars often ${word} when examining complex theoretical frameworks.`,
+      'adjective': `The ${word} nature of the argument made it difficult to refute.`,
+      'adverb': `The researcher approached the problem ${word}, considering all variables.`,
+      'default': `In academic discourse, the term "${word}" carries significant weight.`
+    };
+    
     return {
       meaning: dictionaryData.meaning,
       synonyms: dictionaryData.synonyms,
       antonyms: dictionaryData.antonyms,
-      example: `The ${dictionaryData.partOfSpeech} "${word}" can be used in a GRE-style sentence.`,
+      example: betterExamples[dictionaryData.partOfSpeech] || betterExamples['default'],
       difficulty: determineDifficulty(word, dictionaryData.meaning)
     };
   }
@@ -189,13 +218,13 @@ export async function enrichWord(word) {
     };
   }
   
-  // Step 3: Everything failed, return basic fallback
+  // Step 3: Everything failed, return better fallback
   console.log('⚠️ Using fallback data');
   return {
-    meaning: `A word used in GRE vocabulary context (sources temporarily unavailable)`,
+    meaning: `An important vocabulary word (definition temporarily unavailable - please try again)`,
     synonyms: [],
     antonyms: [],
-    example: `The word "${word}" is commonly used in academic writing.`,
+    example: `Understanding the nuanced meaning of "${word}" is essential for achieving a high GRE verbal score.`,
     difficulty: 'medium'
   };
 }
