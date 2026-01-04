@@ -1,0 +1,433 @@
+[
+  {
+    "id": "1767539875445",
+    "word": "trifling",
+    "meaning": "The act of one who trifles; frivolous behaviour.",
+    "synonyms": [
+      "inconsequential",
+      "petty",
+      "trivial"
+    ],
+    "antonyms": [],
+    "example": "The professor dismissed the student's concerns about the assignment as trifling, but the student felt that mastering the foundational concepts was crucial.",
+    "difficulty": "medium",
+    "timesQuizzed": 3,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:17:55.445Z",
+    "createdAt": "2026-01-04T15:17:55.445Z",
+    "updatedAt": "2026-01-04T15:48:10.230Z"
+  },
+  {
+    "id": "1767539891777",
+    "word": "precariously",
+    "meaning": "In a precarious manner; dangerously",
+    "synonyms": [],
+    "antonyms": [],
+    "example": "The climber precariously balanced on the narrow ledge, with a sheer drop of thousands of feet below.",
+    "difficulty": "medium",
+    "timesQuizzed": 3,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:18:11.778Z",
+    "createdAt": "2026-01-04T15:18:11.778Z",
+    "updatedAt": "2026-01-04T15:48:10.226Z"
+  },
+  {
+    "id": "1767540076510",
+    "word": "exacerbated",
+    "meaning": "To make worse (a problem, bad situation, negative feeling, etc.); aggravate; exasperate.",
+    "synonyms": [],
+    "antonyms": [],
+    "example": "Researchers noted the exacerbated pattern emerging from the data, which contradicted previous theoretical predictions.",
+    "difficulty": "hard",
+    "timesQuizzed": 2,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:21:16.510Z",
+    "createdAt": "2026-01-04T15:21:16.510Z",
+    "updatedAt": "2026-01-04T15:48:10.216Z"
+  },
+  {
+    "id": "1767540405903",
+    "word": "ameliorated",
+    "meaning": "To make better, or improve, something perceived to be in a negative condition.",
+    "synonyms": [],
+    "antonyms": [
+      "deteriorate",
+      "worsen"
+    ],
+    "example": "Skilled negotiators ameliorated strategically, balancing firmness with flexibility to achieve mutually beneficial outcomes.",
+    "difficulty": "hard",
+    "timesQuizzed": 1,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:26:45.903Z",
+    "createdAt": "2026-01-04T15:26:45.903Z",
+    "updatedAt": "2026-01-04T15:48:10.223Z"
+  },
+  {
+    "id": "1767540430630",
+    "word": "ersatz",
+    "meaning": "Something made in imitation; an effigy or substitute",
+    "synonyms": [
+      "imitation",
+      "knock off",
+      "artificial",
+      "faux",
+      "gingerbread"
+    ],
+    "antonyms": [],
+    "example": "The cafe's ersatz coffee, brewed from chicory rather than actual beans, left the connoisseur longing for the real thing.",
+    "difficulty": "medium",
+    "timesQuizzed": 1,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:27:10.630Z",
+    "createdAt": "2026-01-04T15:27:10.630Z",
+    "updatedAt": "2026-01-04T15:48:10.224Z"
+  },
+  {
+    "id": "1767540546688",
+    "word": "mendacious",
+    "meaning": "(of a person) Lying, untruthful or dishonest.",
+    "synonyms": [],
+    "antonyms": [],
+    "example": "After the journalist exposed the politician's mendacious claims about his financial dealings, the public's trust in his administration plummeted.",
+    "difficulty": "hard",
+    "timesQuizzed": 1,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:29:06.688Z",
+    "createdAt": "2026-01-04T15:29:06.688Z",
+    "updatedAt": "2026-01-04T15:48:10.218Z"
+  },
+  {
+    "id": "1767540564673",
+    "word": "nugatory",
+    "meaning": "Trivial, trifling or of little importance.",
+    "synonyms": [],
+    "antonyms": [],
+    "example": "The manager dismissed the employee's complaints about the office color scheme as nugatory compared to the company's financial problems.",
+    "difficulty": "medium",
+    "timesQuizzed": 1,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:29:24.673Z",
+    "createdAt": "2026-01-04T15:29:24.673Z",
+    "updatedAt": "2026-01-04T15:48:10.214Z"
+  },
+  {
+    "id": "1767540678471",
+    "word": "munificient",
+    "meaning": "Extremely generous; showing great liberality in giving.",
+    "synonyms": [
+      "liberal",
+      "bountiful",
+      "lavish"
+    ],
+    "antonyms": [
+      "stingy",
+      "miserly",
+      "parsimonious"
+    ],
+    "example": "Though the philanthropist was munificent, donating millions to the library, the miser remained tight-fisted.",
+    "difficulty": "medium",
+    "timesQuizzed": 1,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:31:18.471Z",
+    "createdAt": "2026-01-04T15:31:18.471Z",
+    "updatedAt": "2026-01-04T15:48:10.228Z"
+  },
+  {
+    "id": "1767540719924",
+    "word": "mimetic",
+    "meaning": "Something mimetic or imitative.",
+    "synonyms": [],
+    "antonyms": [
+      "nonmimetic"
+    ],
+    "example": "The artist's mimetic skill was so precise that his paintings were often mistaken for photographs.",
+    "difficulty": "medium",
+    "timesQuizzed": 1,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:31:59.924Z",
+    "createdAt": "2026-01-04T15:31:59.924Z",
+    "updatedAt": "2026-01-04T15:48:10.225Z"
+  },
+  {
+    "id": "1767540734400",
+    "word": "ape",
+    "meaning": "A primate of the clade Hominoidea, generally larger than monkeys and distinguished from them by having no tail.",
+    "synonyms": [],
+    "antonyms": [],
+    "example": "The biologist argued that, unlike monkeys, an ape is distinguished by having no tail, a trait evident in species such as the gorilla and the orangutan.",
+    "difficulty": "medium",
+    "timesQuizzed": 1,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:32:14.400Z",
+    "createdAt": "2026-01-04T15:32:14.400Z",
+    "updatedAt": "2026-01-04T15:48:10.215Z"
+  },
+  {
+    "id": "1767540755149",
+    "word": "solipsistic",
+    "meaning": "The quality of being so self-absorbed that one believes one's own experience or perspective is the only reality that matters or can be known; marked by an extreme focus on the self.",
+    "synonyms": [
+      "self-absorbed",
+      "narcissistic",
+      "self-centered",
+      "egocentric"
+    ],
+    "antonyms": [
+      "empathetic",
+      "outward-looking",
+      "other-oriented",
+      "altruistic"
+    ],
+    "example": "While the critic's review was intended to be objective, it devolved into a solipsistic monologue about his own preferences rather than an analysis of the work itself.",
+    "difficulty": "hard",
+    "timesQuizzed": 1,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:32:35.149Z",
+    "createdAt": "2026-01-04T15:32:35.149Z",
+    "updatedAt": "2026-01-04T15:48:10.221Z"
+  },
+  {
+    "id": "1767540782684",
+    "word": "shabby",
+    "meaning": "Torn or worn; unkempt.",
+    "synonyms": [],
+    "antonyms": [],
+    "example": "The author's exploration of shabby provided readers with profound insights into human nature and social dynamics.",
+    "difficulty": "easy",
+    "timesQuizzed": 1,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:33:02.684Z",
+    "createdAt": "2026-01-04T15:33:02.684Z",
+    "updatedAt": "2026-01-04T15:48:10.217Z"
+  },
+  {
+    "id": "1767540796263",
+    "word": "ran the gamut",
+    "meaning": "To span or encompass the entire range or spectrum of something, from one extreme to the other.",
+    "synonyms": [
+      "spanned the spectrum",
+      "covered the range",
+      "ranged widely",
+      "embraced everything"
+    ],
+    "antonyms": [
+      "limited",
+      "restricted",
+      "narrowed"
+    ],
+    "example": "The professor's lectures ran the gamut of political philosophy, from Plato's idealism to contemporary libertarianism.",
+    "difficulty": "medium",
+    "timesQuizzed": 1,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:33:16.263Z",
+    "createdAt": "2026-01-04T15:33:16.264Z",
+    "updatedAt": "2026-01-04T15:48:10.220Z"
+  },
+  {
+    "id": "1767541711618",
+    "word": "obscure",
+    "meaning": "To render obscure; to darken; to make dim; to keep in the dark; to hide; to make less visible, intelligible, legible, glorious, beautiful, or illustrious.",
+    "synonyms": [
+      "becloud",
+      "bedarken",
+      "bedim",
+      "bemist",
+      "cimmerian"
+    ],
+    "antonyms": [
+      "clear"
+    ],
+    "example": "Her obscure approach to problem-solving impressed colleagues and earned widespread professional recognition.",
+    "difficulty": "hard",
+    "timesQuizzed": 0,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:48:31.618Z",
+    "createdAt": "2026-01-04T15:48:31.618Z",
+    "updatedAt": "2026-01-04T15:48:31.618Z"
+  },
+  {
+    "id": "1767541737961",
+    "word": "vain",
+    "meaning": "Overly proud of oneself, especially concerning appearance; having a high opinion of one's own accomplishments with slight reason.",
+    "synonyms": [
+      "conceited",
+      "inflated",
+      "puffed up",
+      "fruitless",
+      "futile"
+    ],
+    "antonyms": [],
+    "example": "Critics described the author's narrative style as distinctly vain, setting it apart from conventional approaches.",
+    "difficulty": "hard",
+    "timesQuizzed": 0,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:48:57.961Z",
+    "createdAt": "2026-01-04T15:48:57.961Z",
+    "updatedAt": "2026-01-04T15:48:57.961Z"
+  },
+  {
+    "id": "1767541767274",
+    "word": "temperance",
+    "meaning": "Habitual moderation in regard to the indulgence of the natural appetites and passions; restrained or moderate indulgence",
+    "synonyms": [
+      "calmness",
+      "patience",
+      "sedateness"
+    ],
+    "antonyms": [
+      "gluttony",
+      "intemperance"
+    ],
+    "example": "The committee's temperance decision reflected careful consideration of all available evidence and expert testimony.",
+    "difficulty": "hard",
+    "timesQuizzed": 0,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:49:27.274Z",
+    "createdAt": "2026-01-04T15:49:27.274Z",
+    "updatedAt": "2026-01-04T15:49:27.274Z"
+  },
+  {
+    "id": "1767541897897",
+    "word": "eminent",
+    "meaning": "High, lofty.",
+    "synonyms": [
+      "prominent",
+      "towering",
+      "outstanding",
+      "remarkable",
+      "distinguished"
+    ],
+    "antonyms": [],
+    "example": "The committee's eminent decision reflected careful consideration of all available evidence and expert testimony.",
+    "difficulty": "medium",
+    "timesQuizzed": 0,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:51:37.897Z",
+    "createdAt": "2026-01-04T15:51:37.897Z",
+    "updatedAt": "2026-01-04T15:51:37.897Z"
+  },
+  {
+    "id": "1767541947441",
+    "word": "notoriety",
+    "meaning": "The condition of being infamous or notorious.",
+    "synonyms": [
+      "ill fame",
+      "infamy"
+    ],
+    "antonyms": [],
+    "example": "Her notoriety approach to problem-solving impressed colleagues and earned widespread professional recognition.",
+    "difficulty": "medium",
+    "timesQuizzed": 0,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:52:27.441Z",
+    "createdAt": "2026-01-04T15:52:27.441Z",
+    "updatedAt": "2026-01-04T15:52:27.441Z"
+  },
+  {
+    "id": "1767542045314",
+    "word": "tumultuous",
+    "meaning": "Characterized by loud, confused noise.",
+    "synonyms": [
+      "noisy",
+      "uproarious",
+      "riotous",
+      "tempestuous",
+      "tumultuary"
+    ],
+    "antonyms": [
+      "untumultuous"
+    ],
+    "example": "Her tumultuous approach to problem-solving impressed colleagues and earned widespread professional recognition.",
+    "difficulty": "hard",
+    "timesQuizzed": 0,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:54:05.314Z",
+    "createdAt": "2026-01-04T15:54:05.314Z",
+    "updatedAt": "2026-01-04T15:54:05.314Z"
+  },
+  {
+    "id": "1767542081187",
+    "word": "providential",
+    "meaning": "Pertaining to divine providence.",
+    "synonyms": [
+      "fortunate",
+      "heaven-sent",
+      "lucky",
+      "serendipitous"
+    ],
+    "antonyms": [],
+    "example": "The committee's providential decision reflected careful consideration of all available evidence and expert testimony.",
+    "difficulty": "hard",
+    "timesQuizzed": 0,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T15:54:41.187Z",
+    "createdAt": "2026-01-04T15:54:41.187Z",
+    "updatedAt": "2026-01-04T15:54:41.187Z"
+  },
+  {
+    "id": "1767546677017",
+    "word": "eccentric",
+    "meaning": "One who does not behave like others.",
+    "synonyms": [
+      "crank",
+      "odd duck",
+      "weirdo",
+      "misfit",
+      "nonconformist"
+    ],
+    "antonyms": [
+      "concentric"
+    ],
+    "example": "The committee's eccentric decision reflected careful consideration of all available evidence and expert testimony.",
+    "difficulty": "medium",
+    "timesQuizzed": 0,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T17:11:17.017Z",
+    "createdAt": "2026-01-04T17:11:17.017Z",
+    "updatedAt": "2026-01-04T17:11:17.017Z"
+  },
+  {
+    "id": "1767546730716",
+    "word": "derivative",
+    "meaning": "Something derived.",
+    "synonyms": [
+      "contingent claim",
+      "derived function",
+      "derivate",
+      "derived",
+      "word"
+    ],
+    "antonyms": [
+      "coincidental"
+    ],
+    "example": "The committee's derivative decision reflected careful consideration of all available evidence and expert testimony.",
+    "difficulty": "hard",
+    "timesQuizzed": 0,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-04T17:12:10.716Z",
+    "createdAt": "2026-01-04T17:12:10.716Z",
+    "updatedAt": "2026-01-04T17:12:10.716Z"
+  }
+]
