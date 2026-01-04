@@ -7,6 +7,16 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'mistralai/mistral-7b-instruct:free';
 const DICTIONARY_API = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
 
+// Helper to check if definition is circular (uses the word itself)
+function isCircularDefinition(word, definition) {
+  const wordRoot = word.toLowerCase().slice(0, -3); // Remove common endings
+  const defLower = definition.toLowerCase();
+  
+  // Check if definition contains the word or its root
+  return defLower.includes(word.toLowerCase()) || 
+         (wordRoot.length > 4 && defLower.includes(wordRoot));
+}
+
 // Helper function to get word from Free Dictionary API
 async function getDictionaryData(word) {
   try {
@@ -17,19 +27,28 @@ async function getDictionaryData(word) {
       return null;
     }
 
-    // Extract first definition
-    const firstMeaning = data.meanings[0];
-    const definition = firstMeaning.definitions[0];
-    
-    // Get synonyms and antonyms
+    // Collect ALL meanings (for comprehensive GRE prep)
+    const allMeanings = [];
     const synonyms = [];
     const antonyms = [];
     
     data.meanings.forEach(meaning => {
-      meaning.definitions.forEach(def => {
+      const partOfSpeech = meaning.partOfSpeech;
+      
+      meaning.definitions.forEach((def, idx) => {
+        // Only include non-circular definitions
+        if (!isCircularDefinition(word, def.definition) && idx < 2) {
+          allMeanings.push({
+            definition: def.definition,
+            partOfSpeech: partOfSpeech,
+            example: def.example || null
+          });
+        }
+        
         if (def.synonyms) synonyms.push(...def.synonyms);
         if (def.antonyms) antonyms.push(...def.antonyms);
       });
+      
       if (meaning.synonyms) synonyms.push(...meaning.synonyms);
       if (meaning.antonyms) antonyms.push(...meaning.antonyms);
     });
@@ -38,12 +57,26 @@ async function getDictionaryData(word) {
     const uniqueSynonyms = [...new Set(synonyms)].slice(0, 5);
     const uniqueAntonyms = [...new Set(antonyms)].slice(0, 3);
 
+    if (allMeanings.length === 0) {
+      return null; // All definitions were circular, let AI handle it
+    }
+
+    // Combine multiple meanings if available
+    const primaryMeaning = allMeanings[0];
+    const secondaryMeaning = allMeanings[1];
+    
+    let combinedMeaning = primaryMeaning.definition;
+    if (secondaryMeaning && secondaryMeaning.partOfSpeech !== primaryMeaning.partOfSpeech) {
+      combinedMeaning += ` | As ${secondaryMeaning.partOfSpeech}: ${secondaryMeaning.definition}`;
+    }
+
     return {
-      meaning: definition.definition,
+      meaning: combinedMeaning,
       synonyms: uniqueSynonyms,
       antonyms: uniqueAntonyms,
-      example: definition.example || null,
-      partOfSpeech: firstMeaning.partOfSpeech || 'unknown'
+      example: primaryMeaning.example || null,
+      partOfSpeech: primaryMeaning.partOfSpeech || 'unknown',
+      hasMultipleMeanings: allMeanings.length > 1
     };
   } catch (error) {
     console.log(`Dictionary API: Word "${word}" not found, trying AI...`);
@@ -64,37 +97,47 @@ async function enhanceWithAI(word, dictionaryData = null) {
     return null;
   } else if (dictionaryData) {
     // Dictionary has definition but needs better example
-    prompt = `Create a sophisticated, GRE-level example sentence for the word "${word}".
+    prompt = `You are a GRE vocabulary expert. For the word "${word}", create a sophisticated example sentence.
 
 Word: ${word}
+Part of Speech: ${dictionaryData.partOfSpeech}
 Definition: ${dictionaryData.meaning}
 
-Requirements:
-- Use the word naturally in an academic/formal context
-- The sentence should demonstrate the meaning clearly
-- Make it similar to sentences found on the GRE exam
-- 15-25 words long
-- Show intellectual/academic usage
+Create a GRE-level example sentence that:
+1. Uses "${word}" naturally in an academic/intellectual context
+2. Clearly demonstrates the meaning through context clues
+3. Is 15-25 words long
+4. Resembles sentences from actual GRE reading comprehension passages
+5. Shows the word in a realistic scenario (history, science, literature, philosophy, etc.)
 
-Example of GOOD sentence:
-Word: "ameliorate"
-"The new policies helped ameliorate the dire economic conditions affecting the region's most vulnerable citizens."
+GOOD EXAMPLES:
+- "ameliorate": "The new economic policies helped ameliorate the dire conditions faced by small business owners during the recession."
+- "ephemeral": "The artist's ice sculptures were deliberately ephemeral, designed to melt and disappear within hours of their creation."
+- "pragmatic": "Rather than pursuing idealistic reforms, the senator adopted a pragmatic approach to healthcare legislation."
 
-Now create one for "${word}". Return ONLY valid JSON:
-{"example":"your sophisticated sentence here using the word naturally","difficulty":"medium"}`;
+Now create ONE sophisticated sentence for "${word}".
+
+Return ONLY valid JSON (no markdown, no code blocks):
+{"example":"your sentence here","difficulty":"easy/medium/hard"}`;
   } else {
     // No dictionary data, AI creates everything
-    prompt = `You are a GRE vocabulary expert. Create a complete vocabulary entry for "${word}".
+    prompt = `You are a GRE vocabulary expert. Create a complete, comprehensive entry for "${word}".
 
-Return ONLY valid JSON with:
-- A clear, GRE-level definition
-- 3-5 synonyms
-- 2-3 antonyms  
-- A sophisticated example sentence (15-25 words, academic context, natural usage)
-- Difficulty level
+REQUIREMENTS:
+1. Definition: Clear, non-circular (DON'T use the word itself), GRE-appropriate
+2. If multiple meanings exist, include the most common ones separated by " | "
+3. Synonyms: 3-5 accurate synonyms
+4. Antonyms: 2-3 antonyms (if applicable)
+5. Example: Sophisticated sentence (15-25 words) in academic context
+6. Difficulty: Assess as easy/medium/hard for GRE students
 
-Format:
-{"meaning":"clear definition","synonyms":["syn1","syn2","syn3"],"antonyms":["ant1","ant2"],"example":"Sophisticated sentence using ${word} naturally in academic context","difficulty":"medium"}`;
+AVOID:
+- Circular definitions (don't use the word to define itself)
+- Generic examples
+- Overly simple language
+
+Return ONLY valid JSON:
+{"meaning":"clear, comprehensive definition","synonyms":["syn1","syn2","syn3","syn4"],"antonyms":["ant1","ant2"],"example":"Sophisticated academic sentence using ${word} naturally","difficulty":"medium"}`;
   }
 
   try {
@@ -105,15 +148,15 @@ Format:
         messages: [
           {
             role: 'system',
-            content: 'You respond only with valid JSON. No markdown, no code blocks, just pure JSON.'
+            content: 'You are a GRE vocabulary expert. You create clear, non-circular definitions and sophisticated example sentences. You respond ONLY with valid JSON. No markdown, no code blocks, no explanations - just pure JSON.'
           },
           {
             role: 'user',
             content: prompt
           }
         ],
-        temperature: 0.3,
-        max_tokens: 400
+        temperature: 0.4,
+        max_tokens: 500
       },
       {
         headers: {
@@ -130,7 +173,15 @@ Format:
     
     const jsonMatch = content.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
-      return JSON.parse(jsonMatch[0]);
+      const parsed = JSON.parse(jsonMatch[0]);
+      
+      // Validate no circular definition
+      if (parsed.meaning && isCircularDefinition(word, parsed.meaning)) {
+        console.log('⚠️ AI returned circular definition, rejecting...');
+        return null;
+      }
+      
+      return parsed;
     }
   } catch (error) {
     console.error('AI Enhancement Error:', error.message);
@@ -150,6 +201,39 @@ function determineDifficulty(word, meaning) {
   return 'medium';
 }
 
+// Smart example generator for specific parts of speech (last resort only)
+function generateSmartExample(word, partOfSpeech, meaning) {
+  // Extract key concept from meaning
+  const meaningWords = meaning.toLowerCase().split(' ').filter(w => w.length > 4);
+  const concept = meaningWords[0] || 'quality';
+  
+  const examples = {
+    'noun': [
+      `The ${word} evident in the historical documents provided scholars with valuable insights into the era.`,
+      `Researchers have long debated the nature and implications of ${word} in contemporary society.`,
+      `The concept of ${word} plays a crucial role in understanding this philosophical framework.`
+    ],
+    'verb': [
+      `Effective leaders must ${word} carefully to address the complex challenges facing their organizations.`,
+      `The study examined how different cultures ${word} in response to similar environmental pressures.`,
+      `To ${word} successfully requires both theoretical knowledge and practical experience.`
+    ],
+    'adjective': [
+      `The ${word} characteristics of the material made it ideal for industrial applications.`,
+      `Critics praised the author's ${word} approach to exploring these controversial themes.`,
+      `The ${word} nature of the evidence presented made it difficult to draw definitive conclusions.`
+    ],
+    'adverb': [
+      `The committee members debated ${word}, considering all possible implications of their decision.`,
+      `She approached the complex problem ${word}, demonstrating both skill and patience.`,
+      `The professor explained the theory ${word}, ensuring all students grasped the key concepts.`
+    ]
+  };
+  
+  const exampleSet = examples[partOfSpeech] || examples['noun'];
+  return exampleSet[Math.floor(Math.random() * exampleSet.length)];
+}
+
 export async function enrichWord(word) {
   console.log(`\n🔍 Enriching word: "${word}"`);
   
@@ -160,8 +244,24 @@ export async function enrichWord(word) {
   if (dictionaryData) {
     console.log('✅ Found in dictionary!');
     
+    // Check if definition is circular
+    if (isCircularDefinition(word, dictionaryData.meaning)) {
+      console.log('⚠️ Circular definition detected, using AI for better definition...');
+      const aiData = await enhanceWithAI(word, null);
+      
+      if (aiData && aiData.meaning && !isCircularDefinition(word, aiData.meaning)) {
+        return {
+          meaning: aiData.meaning,
+          synonyms: aiData.synonyms || dictionaryData.synonyms,
+          antonyms: aiData.antonyms || dictionaryData.antonyms,
+          example: aiData.example || generateSmartExample(word, dictionaryData.partOfSpeech, aiData.meaning),
+          difficulty: aiData.difficulty || determineDifficulty(word, aiData.meaning)
+        };
+      }
+    }
+    
     // If dictionary has example, we're good
-    if (dictionaryData.example) {
+    if (dictionaryData.example && dictionaryData.example.length > 20) {
       return {
         meaning: dictionaryData.meaning,
         synonyms: dictionaryData.synonyms,
@@ -171,11 +271,11 @@ export async function enrichWord(word) {
       };
     }
     
-    // Dictionary lacks example, enhance with AI
+    // Dictionary lacks good example, enhance with AI
     console.log('🤖 Enhancing with AI for better example...');
     const aiEnhancement = await enhanceWithAI(word, dictionaryData);
     
-    if (aiEnhancement && aiEnhancement.example) {
+    if (aiEnhancement && aiEnhancement.example && aiEnhancement.example.length > 20) {
       return {
         meaning: dictionaryData.meaning,
         synonyms: dictionaryData.synonyms,
@@ -185,20 +285,12 @@ export async function enrichWord(word) {
       };
     }
     
-    // AI failed, use dictionary data with better generated example
-    const betterExamples = {
-      'noun': `The concept of ${word} has been extensively studied in academic literature.`,
-      'verb': `Scholars often ${word} when examining complex theoretical frameworks.`,
-      'adjective': `The ${word} nature of the argument made it difficult to refute.`,
-      'adverb': `The researcher approached the problem ${word}, considering all variables.`,
-      'default': `In academic discourse, the term "${word}" carries significant weight.`
-    };
-    
+    // Use smart example generator as last resort
     return {
       meaning: dictionaryData.meaning,
       synonyms: dictionaryData.synonyms,
       antonyms: dictionaryData.antonyms,
-      example: betterExamples[dictionaryData.partOfSpeech] || betterExamples['default'],
+      example: generateSmartExample(word, dictionaryData.partOfSpeech, dictionaryData.meaning),
       difficulty: determineDifficulty(word, dictionaryData.meaning)
     };
   }
@@ -221,10 +313,10 @@ export async function enrichWord(word) {
   // Step 3: Everything failed, return better fallback
   console.log('⚠️ Using fallback data');
   return {
-    meaning: `An important vocabulary word (definition temporarily unavailable - please try again)`,
+    meaning: `A GRE-level vocabulary word (complete definition temporarily unavailable - please check spelling and try again)`,
     synonyms: [],
     antonyms: [],
-    example: `Understanding the nuanced meaning of "${word}" is essential for achieving a high GRE verbal score.`,
+    example: `Mastering words like "${word}" requires understanding both their denotative meanings and connotative implications in academic contexts.`,
     difficulty: 'medium'
   };
 }
@@ -369,4 +461,3 @@ function generateImprovedQuizQuestion(word, wordData, allWords) {
 function generateBasicQuizQuestion(word, wordData, allWords) {
   return generateImprovedQuizQuestion(word, wordData, allWords);
 }
-
