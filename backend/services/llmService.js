@@ -419,10 +419,12 @@ Word: "ameliorate" (to make better)
 ✓ Good distractors: "to make worse gradually", "to remain unchanged over time", "to create confusion"
 ✗ Bad distractors: "to destroy", "a type of food", "number"
 
-Return ONLY valid JSON with the question and 4 shuffled options:
-{"question":"What does '${word}' mean?","options":["option1","option2","option3","option4"],"correctIndex":2}
+Return ONLY valid JSON with the question and 4 options.
+IMPORTANT: The first option MUST be the correct definition (we will shuffle later):
+{"question":"What does '${word}' mean?","options":["${wordData.meaning}","wrong option 1","wrong option 2","wrong option 3"]}
 
-Make sure correctIndex points to: "${wordData.meaning}"`;
+Example format:
+{"question":"What does 'ameliorate' mean?","options":["to make something better or more tolerable","to make worse gradually","to remain unchanged over time","to create confusion"]}`;
 
   try {
     const response = await axios.post(
@@ -464,11 +466,29 @@ Make sure correctIndex points to: "${wordData.meaning}"`;
       if (questionData.options && questionData.options.length === 4) {
         const uniqueOptions = [...new Set(questionData.options)];
         if (uniqueOptions.length === 4) {
+          // The first option should be the correct answer (as per our prompt)
+          // Now shuffle the options and track where the correct answer ends up
+          const correctAnswer = questionData.options[0];
+          const allOptions = [...questionData.options];
+          
+          // Shuffle the options
+          const shuffledOptions = allOptions.sort(() => Math.random() - 0.5);
+          
+          // Find where the correct answer ended up after shuffling
+          const correctIndex = shuffledOptions.findIndex(opt => opt === correctAnswer);
+          
+          if (correctIndex === -1) {
+            console.log(`⚠️ Shuffle error for "${word}", using fallback`);
+            return generateImprovedQuizQuestion(word, wordData, allWords);
+          }
+          
+          console.log(`✅ Generated meaning question for "${word}" with correct answer at index ${correctIndex}`);
+          
           return {
             word: word,
             question: questionData.question,
-            options: questionData.options,
-            correctIndex: questionData.correctIndex
+            options: shuffledOptions,
+            correctIndex: correctIndex
           };
         }
       }
