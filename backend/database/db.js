@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { put, head } from '@vercel/blob';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -9,8 +10,15 @@ const DB_DIR = path.join(__dirname, 'data');
 const WORDS_FILE = path.join(DB_DIR, 'words.json');
 const QUIZ_ATTEMPTS_FILE = path.join(DB_DIR, 'quiz_attempts.json');
 
-// Initialize database directory and files
+// Check if running on Vercel
+const isVercel = !!process.env.BLOB_READ_WRITE_TOKEN;
+const WORDS_BLOB_PATH = 'words.json';
+const QUIZ_BLOB_PATH = 'quiz_attempts.json';
+
+// Initialize database directory and files (local development only)
 function initDatabase() {
+  if (isVercel) return; // Skip for Vercel
+  
   if (!fs.existsSync(DB_DIR)) {
     fs.mkdirSync(DB_DIR, { recursive: true });
   }
@@ -24,22 +32,75 @@ function initDatabase() {
   }
 }
 
-// Read data from JSON file
-function readData(filename) {
+// Read data from Vercel Blob or local file
+async function readData(filename) {
   try {
-    const data = fs.readFileSync(filename, 'utf8');
-    return JSON.parse(data);
+    if (isVercel) {
+      // Use Vercel Blob
+      const blobPath = filename.includes('words') ? WORDS_BLOB_PATH : QUIZ_BLOB_PATH;
+      
+      try {
+        // Try to list blobs to find ours
+        const { list } = await import('@vercel/blob');
+        const { blobs } = await list({ token: process.env.BLOB_READ_WRITE_TOKEN });
+        const existingBlob = blobs.find(b => b.pathname === blobPath);
+        
+        if (existingBlob) {
+          // Fetch blob content
+          const response = await fetch(existingBlob.url);
+          const data = await response.json();
+          return data;
+        } else {
+          // If blob doesn't exist, initialize from local file
+          console.log(`Blob ${blobPath} not found, initializing from local file...`);
+          const localData = fs.existsSync(filename) 
+            ? JSON.parse(fs.readFileSync(filename, 'utf8')) 
+            : [];
+          
+          // Upload to blob
+          await writeData(filename, localData);
+          return localData;
+        }
+      } catch (error) {
+        console.error(`Error accessing blob ${blobPath}:`, error);
+        // Fallback to local file if available
+        if (fs.existsSync(filename)) {
+          console.log(`Falling back to local file: ${filename}`);
+          return JSON.parse(fs.readFileSync(filename, 'utf8'));
+        }
+        return [];
+      }
+    } else {
+      // Local development - use filesystem
+      const data = fs.readFileSync(filename, 'utf8');
+      return JSON.parse(data);
+    }
   } catch (error) {
     console.error(`Error reading ${filename}:`, error);
     return [];
   }
 }
 
-// Write data to JSON file
-function writeData(filename, data) {
+// Write data to Vercel Blob or local file
+async function writeData(filename, data) {
   try {
-    fs.writeFileSync(filename, JSON.stringify(data, null, 2));
-    return true;
+    if (isVercel) {
+      // Use Vercel Blob
+      const blobPath = filename.includes('words') ? WORDS_BLOB_PATH : QUIZ_BLOB_PATH;
+      const jsonString = JSON.stringify(data, null, 2);
+      
+      await put(blobPath, jsonString, {
+        access: 'public',
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+        contentType: 'application/json'
+      });
+      
+      return true;
+    } else {
+      // Local development - use filesystem
+      fs.writeFileSync(filename, JSON.stringify(data, null, 2));
+      return true;
+    }
   } catch (error) {
     console.error(`Error writing to ${filename}:`, error);
     return false;
@@ -48,15 +109,15 @@ function writeData(filename, data) {
 
 // Words Database Operations
 export const WordsDB = {
-  getAll: () => readData(WORDS_FILE),
+  getAll: async () => await readData(WORDS_FILE),
   
-  findByWord: (word) => {
-    const words = readData(WORDS_FILE);
+  findByWord: async (word) => {
+    const words = await readData(WORDS_FILE);
     return words.find(w => w.word.toLowerCase() === word.toLowerCase());
   },
   
-  search: (query) => {
-    const words = readData(WORDS_FILE);
+  search: async (query) => {
+    const words = await readData(WORDS_FILE);
     const lowerQuery = query.toLowerCase();
     return words.filter(w => 
       w.word.toLowerCase().includes(lowerQuery) ||
@@ -64,8 +125,8 @@ export const WordsDB = {
     );
   },
   
-  add: (wordData) => {
-    const words = readData(WORDS_FILE);
+  add: async (wordData) => {
+    const words = await readData(WORDS_FILE);
     
     // Check if word already exists
     const exists = words.find(w => w.word.toLowerCase() === wordData.word.toLowerCase());
@@ -90,12 +151,12 @@ export const WordsDB = {
     };
     
     words.push(newWord);
-    writeData(WORDS_FILE, words);
+    await writeData(WORDS_FILE, words);
     return newWord;
   },
   
-  update: (id, updates) => {
-    const words = readData(WORDS_FILE);
+  update: async (id, updates) => {
+    const words = await readData(WORDS_FILE);
     const index = words.findIndex(w => w.id === id);
     
     if (index === -1) {
@@ -108,12 +169,12 @@ export const WordsDB = {
       updatedAt: new Date().toISOString()
     };
     
-    writeData(WORDS_FILE, words);
+    await writeData(WORDS_FILE, words);
     return words[index];
   },
   
-  updateStats: (wordId, isCorrect) => {
-    const words = readData(WORDS_FILE);
+  updateStats: async (wordId, isCorrect) => {
+    const words = await readData(WORDS_FILE);
     const index = words.findIndex(w => w.id === wordId);
     
     if (index !== -1) {
@@ -122,24 +183,24 @@ export const WordsDB = {
         words[index].timesWrong = (words[index].timesWrong || 0) + 1;
       }
       words[index].updatedAt = new Date().toISOString();
-      writeData(WORDS_FILE, words);
+      await writeData(WORDS_FILE, words);
     }
   },
   
-  delete: (id) => {
-    const words = readData(WORDS_FILE);
+  delete: async (id) => {
+    const words = await readData(WORDS_FILE);
     const filtered = words.filter(w => w.id !== id);
-    writeData(WORDS_FILE, filtered);
+    await writeData(WORDS_FILE, filtered);
     return filtered.length < words.length;
   }
 };
 
 // Quiz Attempts Database Operations
 export const QuizAttemptsDB = {
-  getAll: () => readData(QUIZ_ATTEMPTS_FILE),
+  getAll: async () => await readData(QUIZ_ATTEMPTS_FILE),
   
-  add: (attemptData) => {
-    const attempts = readData(QUIZ_ATTEMPTS_FILE);
+  add: async (attemptData) => {
+    const attempts = await readData(QUIZ_ATTEMPTS_FILE);
     
     const newAttempt = {
       id: Date.now().toString(),
@@ -152,12 +213,12 @@ export const QuizAttemptsDB = {
     };
     
     attempts.push(newAttempt);
-    writeData(QUIZ_ATTEMPTS_FILE, attempts);
+    await writeData(QUIZ_ATTEMPTS_FILE, attempts);
     return newAttempt;
   },
   
-  getRecent: (limit = 10) => {
-    const attempts = readData(QUIZ_ATTEMPTS_FILE);
+  getRecent: async (limit = 10) => {
+    const attempts = await readData(QUIZ_ATTEMPTS_FILE);
     return attempts
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .slice(0, limit);

@@ -5,9 +5,9 @@ import { enrichWord } from '../services/llmService.js';
 const router = express.Router();
 
 // Get all words
-router.get('/all', (req, res) => {
+router.get('/all', async (req, res) => {
   try {
-    const words = WordsDB.getAll();
+    const words = await WordsDB.getAll();
     res.json({
       success: true,
       data: words,
@@ -23,7 +23,7 @@ router.get('/all', (req, res) => {
 });
 
 // Search words
-router.get('/search', (req, res) => {
+router.get('/search', async (req, res) => {
   try {
     const { query } = req.query;
     
@@ -34,7 +34,7 @@ router.get('/search', (req, res) => {
       });
     }
 
-    const results = WordsDB.search(query);
+    const results = await WordsDB.search(query);
     res.json({
       success: true,
       data: results,
@@ -62,7 +62,7 @@ router.post('/add', async (req, res) => {
     }
 
     // Check if word already exists
-    const existing = WordsDB.findByWord(word);
+    const existing = await WordsDB.findByWord(word);
     if (existing) {
       return res.status(409).json({
         success: false,
@@ -77,7 +77,7 @@ router.post('/add', async (req, res) => {
     const enrichedData = await enrichWord(word.trim());
 
     // Save to database
-    const newWord = WordsDB.add({
+    const newWord = await WordsDB.add({
       word: word.trim(),
       ...enrichedData
     });
@@ -98,12 +98,12 @@ router.post('/add', async (req, res) => {
 });
 
 // Update word (mark as weak, etc.)
-router.patch('/:id', (req, res) => {
+router.patch('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
 
-    const updatedWord = WordsDB.update(id, updates);
+    const updatedWord = await WordsDB.update(id, updates);
     
     res.json({
       success: true,
@@ -120,10 +120,10 @@ router.patch('/:id', (req, res) => {
 });
 
 // Delete word
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = WordsDB.delete(id);
+    const deleted = await WordsDB.delete(id);
 
     if (deleted) {
       res.json({
@@ -146,9 +146,9 @@ router.delete('/:id', (req, res) => {
 });
 
 // Get statistics
-router.get('/stats', (req, res) => {
+router.get('/stats', async (req, res) => {
   try {
-    const words = WordsDB.getAll();
+    const words = await WordsDB.getAll();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
