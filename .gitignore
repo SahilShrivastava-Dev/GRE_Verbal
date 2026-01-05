@@ -23,7 +23,7 @@ frontend/.env.*
 *API*.sh
 
 # Database files (optional - comment out if you want to version control your data)
-backend/database/data/*.json
+# backend/database/data/*.json  # Commented out - we want to track words.json for deployment
 
 # Build outputs
 frontend/dist/
