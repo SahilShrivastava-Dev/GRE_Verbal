@@ -1,0 +1,97 @@
+name: Deploy to Firebase and Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy-frontend:
+    name: Deploy Frontend to Firebase
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+      
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+        env:
+          VITE_API_URL: ${{ secrets.BACKEND_URL }}
+      
+      - name: Deploy to Firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+          channelId: live
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+
+  deploy-backend:
+    name: Deploy Backend to Cloud Run
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          export_default_credentials: true
+      
+      - name: Configure Docker for GCR
+        run: |
+          gcloud auth configure-docker
+      
+      - name: Build Docker image
+        run: |
+          cd backend
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/gre-vocab-backend:${{ github.sha }} .
+          docker tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/gre-vocab-backend:${{ github.sha }} gcr.io/${{ secrets.GCP_PROJECT_ID }}/gre-vocab-backend:latest
+      
+      - name: Push Docker image
+        run: |
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/gre-vocab-backend:${{ github.sha }}
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/gre-vocab-backend:latest
+      
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy gre-vocab-backend \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/gre-vocab-backend:${{ github.sha }} \
+            --platform managed \
+            --region us-central1 \
+            --allow-unauthenticated \
+            --set-env-vars "NODE_ENV=production" \
+            --set-secrets "OPENROUTER_API_KEY=OPENROUTER_API_KEY:latest" \
+            --set-secrets "OPENROUTER_MODEL=OPENROUTER_MODEL:latest" \
+            --memory 512Mi \
+            --cpu 1 \
+            --max-instances 10 \
+            --port 8080
+      
+      - name: Get Service URL
+        run: |
+          SERVICE_URL=$(gcloud run services describe gre-vocab-backend --platform managed --region us-central1 --format 'value(status.url)')
+          echo "Backend deployed to: $SERVICE_URL"
+          echo "BACKEND_URL=$SERVICE_URL" >> $GITHUB_ENV
+
