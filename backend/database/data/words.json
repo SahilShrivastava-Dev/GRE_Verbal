@@ -444,5 +444,35 @@
     "dateAdded": "2026-01-04T17:22:55.333Z",
     "createdAt": "2026-01-04T17:22:55.333Z",
     "updatedAt": "2026-01-04T17:22:55.333Z"
+  },
+  {
+    "id": "1767591495730",
+    "word": "erudite",
+    "meaning": "A learned or scholarly person | As adjective: Learned, scholarly, with emphasis on knowledge gained from books.",
+    "synonyms": [],
+    "antonyms": [],
+    "example": "While the erudite classicist could quote obscure passages from ancient Greek poetry, her colleague struggled to recall even the most basic historical dates.",
+    "difficulty": "hard",
+    "timesQuizzed": 0,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-05T05:38:15.730Z",
+    "createdAt": "2026-01-05T05:38:15.730Z",
+    "updatedAt": "2026-01-05T05:38:15.730Z"
+  },
+  {
+    "id": "1767591585660",
+    "word": "underscored",
+    "meaning": "To emphasize or highlight something, particularly in a text or speech, to draw attention to its importance or significance; to make a point more noticeable or conspicuous through explicit indication or reinforcement.",
+    "synonyms": [],
+    "antonyms": [],
+    "example": "The author's meticulous research underscored the complex interplay between socioeconomic factors and educational outcomes, challenging simplistic interpretations of the data.",
+    "difficulty": "medium",
+    "timesQuizzed": 0,
+    "timesWrong": 0,
+    "markedWeak": false,
+    "dateAdded": "2026-01-05T05:39:45.660Z",
+    "createdAt": "2026-01-05T05:39:45.660Z",
+    "updatedAt": "2026-01-05T05:39:45.660Z"
   }
 ]
