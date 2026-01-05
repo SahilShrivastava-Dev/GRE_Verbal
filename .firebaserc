@@ -1,6 +1,8 @@
 {
   "projects": {
-    "default": "gre-verbal-app"
-  }
+    "default": "gre-verbal-app-41bed",
+    "production": "gre-verbal-app-41bed"
+  },
+  "targets": {},
+  "etags": {}
 }
-
