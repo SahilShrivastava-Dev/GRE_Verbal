@@ -1,0 +1,274 @@
+[
+  {
+    "id": "1767539991369",
+    "date": "2026-01-04T15:19:51.369Z",
+    "questions": [
+      {
+        "word": "precariously",
+        "question": "What does 'precariously' mean?",
+        "options": [
+          "In a dangerous or unstable manner",
+          "With great care and precision",
+          "In a temporary or brief manner",
+          "With great enthusiasm"
+        ],
+        "correctIndex": 0,
+        "userAnswer": 0,
+        "isCorrect": true
+      },
+      {
+        "word": "trifling",
+        "question": "What does 'trifling' mean?",
+        "options": [
+          "Frivolous or trivial behavior",
+          "Extremely difficult or challenging",
+          "Deeply serious or solemn",
+          "Extremely difficult or challenging"
+        ],
+        "correctIndex": 0,
+        "userAnswer": 0,
+        "isCorrect": true
+      }
+    ],
+    "score": 2,
+    "totalQuestions": 2,
+    "completedAt": "2026-01-04T15:19:51.369Z",
+    "createdAt": "2026-01-04T15:19:51.369Z"
+  },
+  {
+    "id": "1767540275515",
+    "date": "2026-01-04T15:24:35.515Z",
+    "questions": [
+      {
+        "word": "exacerbated",
+        "question": "What does 'exacerbated' mean?",
+        "options": [
+          "To make a problem or bad situation worse",
+          "To provide relief or alleviate suffering",
+          "To completely eliminate a negative condition",
+          "To analyze a situation for potential improvements"
+        ],
+        "correctIndex": 0,
+        "userAnswer": 0,
+        "isCorrect": true
+      },
+      {
+        "word": "trifling",
+        "question": "What does 'trifling' mean?",
+        "options": [
+          "Frivolous or trivial behavior",
+          "Essential and vital",
+          "Careful and meticulous",
+          "Extremely difficult"
+        ],
+        "correctIndex": 0,
+        "userAnswer": 0,
+        "isCorrect": true
+      },
+      {
+        "word": "precariously",
+        "question": "What does 'precariously' mean?",
+        "options": [
+          "In a dangerous or unstable manner",
+          "With great enthusiasm",
+          "In a temporary or provisional way",
+          "With great care and precision"
+        ],
+        "correctIndex": 0,
+        "userAnswer": 0,
+        "isCorrect": true
+      }
+    ],
+    "score": 3,
+    "totalQuestions": 3,
+    "completedAt": "2026-01-04T15:24:35.515Z",
+    "createdAt": "2026-01-04T15:24:35.515Z"
+  },
+  {
+    "id": "1767541690232",
+    "date": "2026-01-04T15:48:10.233Z",
+    "questions": [
+      {
+        "word": "nugatory",
+        "question": "What does 'nugatory' mean?",
+        "options": [
+          "Something mimetic or imitative.",
+          "The act of one who trifles; frivolous behaviour.",
+          "In a precarious manner; dangerously",
+          "Trivial, trifling or of little importance."
+        ],
+        "correctIndex": 3,
+        "userAnswer": 3,
+        "isCorrect": true
+      },
+      {
+        "word": "ape",
+        "question": "What does 'ape' mean?",
+        "options": [
+          "A primate of the clade Hominoidea, generally larger than monkeys and distinguished from them by having no tail.",
+          "Trivial, trifling or of little importance.",
+          "In a precarious manner; dangerously",
+          "To span or encompass the entire range or spectrum of something, from one extreme to the other."
+        ],
+        "correctIndex": 0,
+        "userAnswer": 0,
+        "isCorrect": true
+      },
+      {
+        "word": "exacerbated",
+        "question": "What does 'exacerbated' mean?",
+        "options": [
+          "The quality of being so self-absorbed that one believes one's own experience or perspective is the only reality that matters or can be known; marked by an extreme focus on the self.",
+          "(of a person) Lying, untruthful or dishonest.",
+          "To make better, or improve, something perceived to be in a negative condition.",
+          "To make worse (a problem, bad situation, negative feeling, etc.); aggravate; exasperate."
+        ],
+        "correctIndex": 3,
+        "userAnswer": 3,
+        "isCorrect": true
+      },
+      {
+        "word": "shabby",
+        "question": "What does 'shabby' mean?",
+        "options": [
+          "Trivial, trifling or of little importance.",
+          "To span or encompass the entire range or spectrum of something, from one extreme to the other.",
+          "To make better, or improve, something perceived to be in a negative condition.",
+          "Torn or worn; unkempt."
+        ],
+        "correctIndex": 3,
+        "userAnswer": 3,
+        "isCorrect": true
+      },
+      {
+        "word": "mendacious",
+        "question": "What does 'mendacious' mean?",
+        "options": [
+          "The quality of being so self-absorbed that one believes one's own experience or perspective is the only reality that matters or can be known; marked by an extreme focus on the self.",
+          "To make better, or improve, something perceived to be in a negative condition.",
+          "To make worse (a problem, bad situation, negative feeling, etc.); aggravate; exasperate.",
+          "(of a person) Lying, untruthful or dishonest."
+        ],
+        "correctIndex": 3,
+        "userAnswer": 3,
+        "isCorrect": true
+      },
+      {
+        "word": "ran the gamut",
+        "question": "What does 'ran the gamut' mean?",
+        "options": [
+          "Something made in imitation; an effigy or substitute",
+          "To span or encompass the entire range or spectrum of something, from one extreme to the other.",
+          "The act of one who trifles; frivolous behaviour.",
+          "Trivial, trifling or of little importance."
+        ],
+        "correctIndex": 1,
+        "userAnswer": 1,
+        "isCorrect": true
+      },
+      {
+        "word": "solipsistic",
+        "question": "What does 'solipsistic' mean?",
+        "options": [
+          "To make better, or improve, something perceived to be in a negative condition.",
+          "The quality of being so self-absorbed that one believes one's own experience or perspective is the only reality that matters or can be known; marked by an extreme focus on the self.",
+          "(of a person) Lying, untruthful or dishonest.",
+          "To make worse (a problem, bad situation, negative feeling, etc.); aggravate; exasperate."
+        ],
+        "correctIndex": 1,
+        "userAnswer": 1,
+        "isCorrect": true
+      },
+      {
+        "word": "ameliorated",
+        "question": "What does 'ameliorated' mean?",
+        "options": [
+          "To make better, or improve, something perceived to be in a negative condition.",
+          "The quality of being so self-absorbed that one believes one's own experience or perspective is the only reality that matters or can be known; marked by an extreme focus on the self.",
+          "(of a person) Lying, untruthful or dishonest.",
+          "To make worse (a problem, bad situation, negative feeling, etc.); aggravate; exasperate."
+        ],
+        "correctIndex": 0,
+        "userAnswer": 0,
+        "isCorrect": true
+      },
+      {
+        "word": "ersatz",
+        "question": "What does 'ersatz' mean?",
+        "options": [
+          "Something made in imitation; an effigy or substitute",
+          "Trivial, trifling or of little importance.",
+          "The act of one who trifles; frivolous behaviour.",
+          "In a precarious manner; dangerously"
+        ],
+        "correctIndex": 0,
+        "userAnswer": 0,
+        "isCorrect": true
+      },
+      {
+        "word": "mimetic",
+        "question": "What does 'mimetic' mean?",
+        "options": [
+          "Trivial, trifling or of little importance.",
+          "Something mimetic or imitative.",
+          "A primate of the clade Hominoidea, generally larger than monkeys and distinguished from them by having no tail.",
+          "In a precarious manner; dangerously"
+        ],
+        "correctIndex": 1,
+        "userAnswer": 1,
+        "isCorrect": true
+      },
+      {
+        "word": "precariously",
+        "question": "What does 'precariously' mean?",
+        "options": [
+          "Extremely generous; showing great liberality in giving.",
+          "In a precarious manner; dangerously",
+          "Something mimetic or imitative.",
+          "To span or encompass the entire range or spectrum of something, from one extreme to the other."
+        ],
+        "correctIndex": 1,
+        "userAnswer": 1,
+        "isCorrect": true
+      },
+      {
+        "word": "munificient",
+        "question": "What does 'munificient' mean?",
+        "options": [
+          "In a precarious manner; dangerously",
+          "Trivial, trifling or of little importance.",
+          "To span or encompass the entire range or spectrum of something, from one extreme to the other.",
+          "Extremely generous; showing great liberality in giving."
+        ],
+        "correctIndex": 3,
+        "userAnswer": 3,
+        "isCorrect": true
+      },
+      {
+        "word": "trifling",
+        "question": "What does 'trifling' mean?",
+        "options": [
+          "Something mimetic or imitative.",
+          "Extremely generous; showing great liberality in giving.",
+          "Something made in imitation; an effigy or substitute",
+          "The act of one who trifles; frivolous behaviour."
+        ],
+        "correctIndex": 3,
+        "userAnswer": 3,
+        "isCorrect": true
+      }
+    ],
+    "score": 13,
+    "totalQuestions": 13,
+    "completedAt": "2026-01-04T15:48:10.233Z",
+    "createdAt": "2026-01-04T15:48:10.233Z"
+  },
+  {
+    "id": "1767548061104",
+    "date": "2026-01-04T17:34:21.104Z",
+    "score": 56,
+    "totalQuestions": 9,
+    "completedAt": "2026-01-04T17:34:21.104Z",
+    "createdAt": "2026-01-04T17:34:21.104Z"
+  }
+]
