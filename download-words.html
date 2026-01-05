@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download GRE Words JSON</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin: 10px 5px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        .status.show {
+            display: block;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .word-count {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        .instructions {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 4px solid #667eea;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 GRE Vocab - Download Your Data</h1>
+        <p class="subtitle">Download your vocabulary database to upload to Google Drive</p>
+
+        <button onclick="fetchWords()">📥 Download words.json</button>
+        <button onclick="fetchQuizzes()">📊 Download quiz_attempts.json</button>
+        <button onclick="fetchBoth()">📦 Download Both Files</button>
+
+        <div id="status" class="status"></div>
+        <div id="wordCount" class="word-count"></div>
+
+        <div class="instructions">
+            <h3>📋 Next Steps After Download:</h3>
+            <ol>
+                <li><strong>Upload to Google Drive:</strong>
+                    <ul>
+                        <li>Go to <a href="https://drive.google.com" target="_blank">drive.google.com</a></li>
+                        <li>Create a folder: "GRE_Vocab"</li>
+                        <li>Upload <code>words.json</code> to this folder</li>
+                    </ul>
+                </li>
+                <li><strong>Make it Public:</strong>
+                    <ul>
+                        <li>Right-click on <code>words.json</code></li>
+                        <li>Click "Share"</li>
+                        <li>Click "Change to anyone with the link"</li>
+                        <li>Set to "Viewer"</li>
+                        <li>Copy the link</li>
+                    </ul>
+                </li>
+                <li><strong>Get Direct Link:</strong>
+                    <ul>
+                        <li>Your link will look like: <code>https://drive.google.com/file/d/FILE_ID/view</code></li>
+                        <li>Change it to: <code>https://drive.google.com/uc?export=download&id=FILE_ID</code></li>
+                        <li>Give me this link!</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://gre-verbal-api.vercel.app/api';
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type} show`;
+        }
+
+        async function fetchWords() {
+            try {
+                showStatus('📥 Fetching words from backend...', 'info');
+                
+                const response = await fetch(`${API_URL}/word/all`);
+                const data = await response.json();
+                
+                if (data.success && data.data) {
+                    const words = data.data;
+                    document.getElementById('wordCount').textContent = `Found ${words.length} words in your vocabulary!`;
+                    
+                    // Download as JSON file
+                    const blob = new Blob([JSON.stringify(words, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'words.json';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    showStatus(`✅ Downloaded words.json (${words.length} words)`, 'success');
+                } else {
+                    showStatus('❌ Failed to fetch words', 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function fetchQuizzes() {
+            try {
+                showStatus('📥 Fetching quiz attempts...', 'info');
+                
+                // Since we don't have a direct endpoint, we'll create an empty array
+                // User can add this later if needed
+                const quizzes = [];
+                
+                const blob = new Blob([JSON.stringify(quizzes, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'quiz_attempts.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showStatus('✅ Downloaded quiz_attempts.json', 'success');
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function fetchBoth() {
+            await fetchWords();
+            setTimeout(() => fetchQuizzes(), 1000);
+        }
+    </script>
+</body>
+</html>
+

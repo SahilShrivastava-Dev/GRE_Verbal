@@ -1,5 +1,5 @@
 import express from 'express';
-import * as db from '../database/db.js';
+import * as db from '../database/db-gdrive.js';
 import { generateQuizQuestion, generateSynonymOptions, generateAntonymOptions } from '../services/llmService.js';
 
 const router = express.Router();

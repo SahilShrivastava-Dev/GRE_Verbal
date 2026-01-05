@@ -1,5 +1,5 @@
 import express from 'express';
-import { WordsDB } from '../database/db.js';
+import { WordsDB } from '../database/db-gdrive.js';
 import { enrichWord } from '../services/llmService.js';
 
 const router = express.Router();
