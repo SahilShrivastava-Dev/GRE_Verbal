@@ -15,6 +15,14 @@ const isVercel = !!process.env.BLOB_READ_WRITE_TOKEN;
 const WORDS_BLOB_PATH = 'words.json';
 const QUIZ_BLOB_PATH = 'quiz_attempts.json';
 
+// Debug logging
+console.log('🔧 Database Config:', {
+  isVercel,
+  hasToken: !!process.env.BLOB_READ_WRITE_TOKEN,
+  tokenLength: process.env.BLOB_READ_WRITE_TOKEN?.length,
+  wordsPath: WORDS_BLOB_PATH
+});
+
 // Initialize database directory and files (local development only)
 function initDatabase() {
   if (isVercel) return; // Skip for Vercel
@@ -47,8 +55,10 @@ async function readData(filename) {
         
         if (existingBlob) {
           // Fetch blob content
+          console.log(`📖 Reading from Blob: ${existingBlob.url}`);
           const response = await fetch(existingBlob.url);
           const data = await response.json();
+          console.log(`✅ Blob read successful: ${data.length} items`);
           return data;
         } else {
           // If blob doesn't exist, initialize from local file
@@ -89,12 +99,15 @@ async function writeData(filename, data) {
       const blobPath = filename.includes('words') ? WORDS_BLOB_PATH : QUIZ_BLOB_PATH;
       const jsonString = JSON.stringify(data, null, 2);
       
-      await put(blobPath, jsonString, {
+      console.log(`📝 Writing to Blob: ${blobPath}, items: ${data.length}`);
+      
+      const result = await put(blobPath, jsonString, {
         access: 'public',
         token: process.env.BLOB_READ_WRITE_TOKEN,
         contentType: 'application/json'
       });
       
+      console.log(`✅ Blob write successful: ${result.url}`);
       return true;
     } else {
       // Local development - use filesystem

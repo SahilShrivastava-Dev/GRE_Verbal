@@ -33,6 +33,22 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Debug endpoint for database config
+app.get('/api/debug/config', (req, res) => {
+  res.json({
+    success: true,
+    config: {
+      isVercel: !!process.env.VERCEL,
+      hasBlobToken: !!process.env.BLOB_READ_WRITE_TOKEN,
+      blobTokenLength: process.env.BLOB_READ_WRITE_TOKEN?.length || 0,
+      hasOpenRouterKey: !!process.env.OPENROUTER_API_KEY,
+      nodeEnv: process.env.NODE_ENV,
+      port: process.env.PORT || 5000
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({
