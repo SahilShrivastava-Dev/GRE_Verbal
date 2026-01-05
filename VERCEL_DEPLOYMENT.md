@@ -57,7 +57,7 @@ vercel env add OPENROUTER_API_KEY
 ```
 
 **When prompted:**
-1. "Value?" → Paste: `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`
+1. "Value?" → Paste: `sk-or-v1-`
 2. "Add to which environments?" → Select **all** (Production, Preview, Development)
 
 ### **Step 5: Redeploy with API Key**
@@ -100,7 +100,7 @@ Visit: **https://vercel.com/new**
 ### **4. Add Environment Variable**
 Click **"Environment Variables"** → Add:
 - **Key:** `OPENROUTER_API_KEY`
-- **Value:** `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`
+- **Value:** `sk-or-v1-`
 
 ### **5. Deploy**
 Click **"Deploy"** → Wait ~2 minutes → LIVE! 🎉
