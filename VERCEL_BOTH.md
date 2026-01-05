@@ -40,7 +40,7 @@ Fill in these **exact** settings:
 1. Expand **"Environment Variables"** section
 2. Add:
    - **Name:** `OPENROUTER_API_KEY`
-   - **Value:** `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`
+   - **Value:** `sk-or-v1-`
    - **Environments:** Select **All** (Production, Preview, Development)
 3. Click **"Add"**
 
