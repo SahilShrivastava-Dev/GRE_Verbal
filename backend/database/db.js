@@ -51,12 +51,19 @@ async function readData(filename) {
         // Try to list blobs to find ours
         const { list } = await import('@vercel/blob');
         const { blobs } = await list({ token: process.env.BLOB_READ_WRITE_TOKEN });
-        const existingBlob = blobs.find(b => b.pathname === blobPath);
         
-        if (existingBlob) {
+        // Find ALL blobs with matching pathname and get the LATEST one
+        const matchingBlobs = blobs.filter(b => b.pathname === blobPath);
+        
+        if (matchingBlobs.length > 0) {
+          // Sort by uploadedAt descending (newest first) and take the first one
+          const latestBlob = matchingBlobs.sort((a, b) => 
+            new Date(b.uploadedAt) - new Date(a.uploadedAt)
+          )[0];
+          
           // Fetch blob content
-          console.log(`📖 Reading from Blob: ${existingBlob.url}`);
-          const response = await fetch(existingBlob.url);
+          console.log(`📖 Reading from Blob: ${latestBlob.url} (uploaded: ${latestBlob.uploadedAt})`);
+          const response = await fetch(latestBlob.url);
           const data = await response.json();
           console.log(`✅ Blob read successful: ${data.length} items`);
           return data;
@@ -101,6 +108,23 @@ async function writeData(filename, data) {
       
       console.log(`📝 Writing to Blob: ${blobPath}, items: ${data.length}`);
       
+      // Delete old blobs with the same pathname to avoid duplicates
+      try {
+        const { list, del } = await import('@vercel/blob');
+        const { blobs } = await list({ token: process.env.BLOB_READ_WRITE_TOKEN });
+        const oldBlobs = blobs.filter(b => b.pathname === blobPath);
+        
+        if (oldBlobs.length > 0) {
+          console.log(`🗑️ Deleting ${oldBlobs.length} old blob(s)...`);
+          for (const oldBlob of oldBlobs) {
+            await del(oldBlob.url, { token: process.env.BLOB_READ_WRITE_TOKEN });
+          }
+        }
+      } catch (cleanupError) {
+        console.warn(`⚠️ Cleanup warning (non-fatal):`, cleanupError.message);
+      }
+      
+      // Write new blob
       const result = await put(blobPath, jsonString, {
         access: 'public',
         token: process.env.BLOB_READ_WRITE_TOKEN,
